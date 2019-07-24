@@ -120,7 +120,7 @@ class Todo implements Serializable {
 
 ### todos-api
 
-[Todo(s) API](https://github.com/corbtastik/todos-api) is a sample Spring Boot service that uses `spring-boot-starter-web` to implement a Spring MVC based REST API for `Todo(s)`.  Not listed in this set but similar is [todos-webflux](https://github.com/corbtastik/todos-webflux) which is the same API implemented using `spring-boot-starter-webflux` and hence non-blocking (and uses Netty container).
+[Todo(s) API](https://github.com/Pivotal-Field-Engineering/todos-apps/tree/master/todos-api) is a sample Spring Boot service that uses `spring-boot-starter-web` to implement a Spring MVC based REST API for `Todo(s)`.
 
 This is nice Spring Boot ice-breaker app and hacks at core Spring Boot features such as using the Spring Boot Starter pom, Auto-configuration, Property Sources, Configuration Properties, embedded Containers and Logging.  During the workshop we'll use Spring Cloud to connect persistence backends that implement the same HTTP CRUD API.
 
@@ -140,7 +140,7 @@ This is nice Spring Boot ice-breaker app and hacks at core Spring Boot features 
 
 ### todos-edge
 
-[Todo(s) Edge](https://github.com/corbtastik/todos-edge) is an edge for other Todo apps and serves as a client entry-point into app functionality, implemented using [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway).  The source is Kotlin however there's remarkably little code as the gateway is virtually all configuration.  By default the edge is configured to route traffic sent to `/todos/` to a backing API of some sort while root traffic routes to the UI.  During certain sections of the workshop we'll use Spring Cloud to control where the edge sends traffic.
+[Todo(s) Edge](https://github.com/Pivotal-Field-Engineering/todos-apps/tree/master/todos-edge) is an edge for other Todo apps and serves as a client entry-point into app functionality, implemented using [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway).  The source is Kotlin however there's remarkably little code as the gateway is virtually all configuration.  By default the edge is configured to route traffic sent to `/todos/` to a backing API of some sort while root traffic routes to the UI.  During certain sections of the workshop we'll use Spring Cloud to control where the edge sends traffic.
 
 **Talking Points**
 
@@ -203,24 +203,3 @@ Todo(s) App is a composite backend for a fully functional Todo app, it contains 
 * RestTemplate and Client Side Load-balancing
 * [Pivotal Blog - Caching Patterns](https://content.pivotal.io/blog/an-introduction-to-look-aside-vs-inline-caching-patterns)
 
-### todos-shell
-
-Todo(s) shell is a [Spring Shell](https://projects.spring.io/spring-shell/) application used to automate configuration and deployment of Todo apps to PCF.  It uses the [CF Java Client](https://github.com/cloudfoundry/cf-java-client), your CF credentials and your locally compiled `todos-*` jars to automate app deployment to PCF.
-
-The list of shell commands
-
-```bash
-push-app: todos-edge,todos-api,todos-webui NO spring-cloud
-push-scs: push-app with spring-cloud    
-push-internal: push-app with private app networking
-push-lookaside: todos-edge,todos-app,todos-webui with spring-cloud
-push-my-sql: todos-edge,todos-mysql,todos-webui NO spring-cloud
-push-scs-my-sql: todos-edge,todos-mysql,todos-webui with spring-cloud
-push-redis: todos-edge,todos-redis,todos-webui NO spring-cloud
-push-scs-redis: todos-edge,todos-redis,todos-webui with spring-cloud    
-```
-
-**Talking Points**
-
-* [Spring Shell](https://projects.spring.io/spring-shell/)
-* [CF Java Client](https://github.com/cloudfoundry/cf-java-client)
