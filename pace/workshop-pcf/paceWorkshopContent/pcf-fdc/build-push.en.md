@@ -10,20 +10,14 @@ At the end of this Shop you'll have 3 apps running in PCF that have been manuall
 
 ### 1. Build
 
-This assumes you've completed [Projects Setup](#projects-setup), if not please check that box.
+This assumes you've completed Projects Setup, if not please check that box.
 
 Manual steps to build.
 
 ```bash
-# change into your working directory (i.e. todos-apps)
+# change into your working directory for the repo (i.e. todos-apps)
 cd ~/Desktop/todos-apps
-cd todos-api
 ./mvnw clean package
-cd ../todos-edge
-./mvnw clean package
-cd ../todos-webui
-./mvnw clean package
-cd ..
 ```
 
 A successful build puts a Spring Boot jar in each projects `target` directory, for example you should have these jars after building
@@ -33,11 +27,12 @@ A successful build puts a Spring Boot jar in each projects `target` directory, f
 * [`todos-webui`](#todos-webui)
 
 ```bash
-cd ~/Desktop/todos-apps
-# jars after build
-./todos-api/target/todos-api-1.0.0.SNAP.jar
-./todos-edge/target/todos-edge-1.0.0.SNAP.jar
-./todos-webui/target/todos-webui-1.0.0.SNAP.jar
+ls -al  **/target/todos*jar
+
+-rw-r--r--  1 azwickey  staff  28521531 Jul 24 15:49 todos-api/target/todos-api-1.0.0.SNAP.jar
+-rw-r--r--  1 azwickey  staff  29580311 Jul 24 15:49 todos-edge/target/todos-edge-1.0.0.SNAP.jar
+-rw-r--r--  1 azwickey  staff  25528636 Jul 24 15:49 todos-webui/target/todos-webui-1.0.0.SNAP.jar
+
 ```
 
 ### 2. Push to PCF
@@ -169,8 +164,6 @@ cf apps
 
 * Create a custom route in cf and map to your `todos-edge` to `SOMETHING`
     * `cf map-route your-todos-edge apps.retro.io --hostname SOMETHING`
-* Use [Todo(s) Shell](#todos-shell) to automate the deployment of the same three apps as a single functioning "Todo app" on PCF with one command.  The shell will use your PCF creds and push configured apps to the platform.  The deploy results in 3 apps running (`todos-edge`,`todos-api`,`todos-webui`) each with a user provided "tag" which will prefix the running instances.
-    * `shell:>push-app --tag corbs`
 
 Pause...take a quick review and field questions
 
