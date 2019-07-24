@@ -1,0 +1,8 @@
+---
+applications:
+- name: fdc-cn-workshop
+  memory: 64M
+  instances: 1
+  buildpacks: 
+  - staticfile_buildpack
+  path: publicGen/
