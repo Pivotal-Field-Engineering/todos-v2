@@ -1,0 +1,8 @@
+---
+applications:
+- name: todos-docs
+  memory: 512MB
+  path: site
+  routes:
+  - route: corbs-todos-docs.cfapps.io
+  buildpack: staticfile_buildpack

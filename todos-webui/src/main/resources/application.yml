@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: 'todos-webui'
+  thymeleaf:
+    cache: false
+todos:
+  webui:
+    placeholder: "Time to wash the dog?"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

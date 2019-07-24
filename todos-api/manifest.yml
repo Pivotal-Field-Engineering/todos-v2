@@ -1,0 +1,8 @@
+---
+applications:
+- name: todos-api
+  memory: 1G
+  path: target/todos-api-1.0.0.SNAP.jar
+  buildpack: java_buildpack_offline
+  env:
+    TODOS_API_LIMIT: 1024

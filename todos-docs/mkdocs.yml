@@ -1,0 +1,42 @@
+site_name: 'Todos Playground'
+site_description: 'Docs for the Todo set of apps'
+site_author: 'corbs'
+repo_name: 'corbtastik/todos-docs'
+repo_url: 'https://github.com/corbtastik/todos-docs'
+theme:
+  name: 'material'
+  custom_dir: 'theme'
+  palette:
+    primary: 'indigo'
+    accent: 'pink'  
+  font:
+    text: 'Montserrat'
+    code: 'Source Code Pro'
+  logo: 'images/logo.png'
+  favicon: 'images/favicon.ico'
+  feature:
+    tabs: false
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/corbtastik'
+    - type: 'twitter'
+      link: 'https://twitter.com/corbsmartin'
+    - type: 'linkedin'
+      link: 'https://linkedin.com/in/corbettmartin'
+# Custom css      
+extra_css:
+  - 'stylesheets/styles.css' 
+  - 'assets/stylesheets/theme.css'
+# Custom javascript
+extra_javascript:
+  - 'javascripts/docs.js'  
+  - 'assets/javascripts/theme.js'       
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true      
+    

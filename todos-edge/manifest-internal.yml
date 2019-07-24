@@ -1,0 +1,11 @@
+---
+applications:
+- name: todos-edge
+  memory: 1G
+  routes:
+  - route: todos-edge.apps.retro.io
+  - route: todos.apps.retro.io  
+  path: target/todos-edge-1.0.0.SNAP.jar
+  env:
+    TODOS_UI_ENDPOINT: https://todos-webui.apps.internal
+    TODOS_API_ENDPOINT: https://todos-api.apps.internal
