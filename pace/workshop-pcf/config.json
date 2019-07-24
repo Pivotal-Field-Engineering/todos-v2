@@ -1,0 +1,44 @@
+{
+    "workshopSubject":"PCF Workshop",
+    "workshopHomepage":"index.html",
+    "modules": [
+    {
+        "type": "concepts",
+        "content": [
+              {
+                  "name":"Pivotal Intro",
+                  "filename":"pcf-fdc/pivotal-intro-slide"
+              },
+              {
+                  "name":"Cloud Native Platform",
+                  "filename":"pcf-fdc/cloud-native-platform-slide"
+              },
+              {
+                  "name":"Cloud Native Apps",
+                  "filename":"pcf-fdc/cloud-native-apps-slide"
+              },
+              {
+                  "name":"Cloud Native Operations",
+                  "filename":"pcf-fdc/cloud-native-ops-slide"
+              },
+              {
+                  "name":"PCF + Spring",
+                  "filename":"pcf-fdc/pcf-spring-slide"
+              },
+              {
+                  "name":"SRE Principles",
+                  "filename":"pcf-fdc/sre-slide"
+              }
+        ]
+    },
+    {
+        "type": "demos",
+        "content": [
+            {
+            "name":"example-demo",
+            "filename":"example/example-demo"
+            }
+        ]
+    }
+  ]
+}
