@@ -21,11 +21,6 @@
                   "name":"Cloud Native Apps",
                   "filename":"pcf-fdc/cloud-native-apps-slide"
               },
-
-              {
-                "name":"SRE Principles",
-                "filename":"pcf-fdc/sre-slide"
-              },
               {
                   "name":"PCF + Spring",
                   "filename":"pcf-fdc/pcf-spring-slide"
@@ -37,7 +32,7 @@
         "content": [
             {
             "name":"example-demo",
-            "filename":"example/example-demo"
+            "filename":"pcf-fdc/example-demo"
             }
         ]
     }
