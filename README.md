@@ -8,8 +8,22 @@ For example [**TodoMvc**](http://todomvc.com) is a resource developers can use t
 
 ## Playground
 
-Sample | Description
------------- | -------------
-[__todos-api__](/todos-api) | A sample Spring Boot service that uses spring-boot-starter-web to implement a Spring MVC based REST API for Todo(s)
-[__todos-webui__](/todos-webui) | A sample frontend Vue.js app wrapped in Spring Boot goodness.
-[__todos-edge__](/todos-edge) | Todo(s) Edge is an edge for other Todo apps and serves as a client entry-point into functionality, implemented using Spring Cloud Gateway.
+### [__todos-api__](/todos-api)
+
+A sample [Spring Boot](https://spring.io/projects/spring-boot) service that uses spring-boot-starter-web to implement a Spring MVC based REST API for Todo(s)
+
+---
+
+### [__todos-webui__](/todos-webui)
+
+A sample frontend [Vue.js](https://vuejs.org/) app wrapped in [Spring Boot](https://spring.io/projects/spring-boot) goodness.
+
+---
+
+### [__todos-edge__](/todos-edge)
+
+Todo(s) Edge is an edge for other Todo apps and serves as a client entry-point into functionality, implemented using [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway).
+
+---
+
+
