@@ -42,6 +42,7 @@
                     const self = this;
                     values.forEach(todo => {
                         if(todo.id && !self.offline) {
+                            console.log("DEBUG|watchTodos|Patching todo " + todo);
                             Vue.http.patch('/todos/' + todo.id,todo);
                         }
                     });
@@ -80,6 +81,7 @@
                 return word + (count === 1 ? '' : 's');
             },
             addTodo: function () {
+                console.log("DEBUG|addTodo|adding new todo");
                 const value = this.newTodo && this.newTodo.trim();
                 if (!value) {
                     return;
@@ -90,35 +92,47 @@
                 });
                 this.newTodo = '';
             },
+            //ERROR, WARN, INFO, DEBUG, or TRACE.
             createTodo: function(todo) {
                 const self = this;
                 if(!self.offline) {
+                    console.log("DEBUG|createTodo|API online");
+                    console.log("DEBUG|createTodo|Posting new todo " + todo);
                     Vue.http.post('/todos/', {
                         title: todo.title,
                         complete: todo.complete
                     }).then(response => {
+                        console.log("DEBUG|createTodo|Response OK");
                         self.todos.unshift(response.body);
                     });
                 } else {
+                    console.log("WARN|createTodo|API OFFLINE saving to local storage");
                     self.todos.unshift(todo);
                 }
             },
             removeTodo: function (todo) {
                 const self = this;
                 if(!self.offline) {
+                    console.log("DEBUG|removeTodo|API online");
+                    console.log("DEBUG|removeTodo|Removing todo " + todo.id);
                     Vue.http.delete( '/todos/' + todo.id).then(() => {
+                        console.log("TRACE|removeTodo|Re-indexing todos");
                         const index = self.todos.indexOf(todo);
                         self.todos.splice(index, 1);
+                        console.log("TRACE|removeTodo|Re-indexing complete");
                     });
                 } else {
+                    console.log("DEBUG|removeTodo|API OFFLINE removing from local storage");
                     const index = self.todos.indexOf(todo);
                     self.todos.splice(index, 1);
                 }
             },
             editTodo: function (todo) {
                 if(todo.complete) {
+                    console.log("ERROR|editTodo|Can't edit a complete todo amigo");
                     return;
                 }
+                console.log("DEBUG|editTodo|Editing todos " + todo.id);
                 this.beforeEditCache = todo.title;
                 this.editedTodo = todo;
             },
@@ -131,10 +145,12 @@
                 if (!todo.title) {
                     this.removeTodo(todo);
                 }
+                console.log("DEBUG|doneEdit|Editing complete " + todo.id);
             },
             cancelEdit: function (todo) {
                 this.editedTodo = null;
                 todo.title = this.beforeEditCache;
+                console.log("DEBUG|cancelEdit|Editing cancelled " + todo.id);
             },
             removeCompleted: function () {
                 this.todos = filters.active(this.todos);
@@ -148,11 +164,11 @@
                 list.forEach(item => {
                     self.todos.unshift(item);
                 });
-                console.log("INFO /todos is online, saving to API");
+                console.log("INFO|beforeMount|/todos is online, saving to API");
             }, response => {
                 if(response.status===404) {
                     // api offline, save local only
-                    console.log("WARN /todos is offline, saving local");
+                    console.log("WARN|beforeMount|/todos is offline, saving to local storage");
                     self.offline = true;
                 }
             });
@@ -161,18 +177,18 @@
                 list.forEach(item => {
                     self.metadata.push(item);
                 });
-                console.log("INFO /metadata loaded");
+                console.log("INFO|beforeMount|/metadata is online");
             }, response => {
                 if(response.status===404) {
-                    console.log("WARN /metadata is offline");
+                    console.log("WARN|beforeMount|/metadata is offline");
                 }
             });
             Vue.http.get('/about').then(response => {
                 self.buildInformation = JSON.parse(response.bodyText);
-                console.log("INFO /about loaded");
+                console.log("INFO|beforeMount|/about is online");
             }, response => {
                 if(response.status===404) {
-                    console.log("WARN /about is offline");
+                    console.log("WARN|beforeMount|/about is offline");
                 }
             });
         },
