@@ -30,10 +30,22 @@
     {
         "type": "demos",
         "content": [
-            {
-            "name":"example-demo",
-            "filename":"pcf-fdc/example-demo"
-            }
+          {
+            "name":"Prerequisites and Sample Overview",
+            "filename":"pcf-fdc/prereq-overview"
+          },
+          {
+            "name":"Project Build and Initial App Deployment",
+            "filename":"pcf-fdc/build-push"
+          },
+          {
+            "name":"Application Operations",
+            "filename":"pcf-fdc/ops"
+          },
+          {
+            "name":"Introduce Spring Cloud Services",
+            "filename":"pcf-fdc/scs"
+          }
         ]
     }
   ]
