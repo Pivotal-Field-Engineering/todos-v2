@@ -3,6 +3,9 @@ spring:
     name: 'todos-webui'
   thymeleaf:
     cache: false
+  security:
+    user:
+      name: Bucky
 todos:
   webui:
     placeholder: "Time to wash the dog?"
@@ -11,3 +14,6 @@ management:
     web:
       exposure:
         include: '*'
+logging:
+  level:
+    io.todos: TRACE

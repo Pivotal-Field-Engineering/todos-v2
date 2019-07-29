@@ -1,5 +1,7 @@
 package io.todos;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.AbstractEnvironment;
@@ -8,6 +10,8 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -17,6 +21,8 @@ import java.util.stream.Collectors;
 
 @RestController
 public class WebAPI {
+
+    private static final Logger LOG = LoggerFactory.getLogger(WebAPI.class);
 
     private Environment env;
 
@@ -48,6 +54,26 @@ public class WebAPI {
     @GetMapping("/about")
     public BuildProperties buildInfo() {
         return buildProperties;
+    }
+
+    @GetMapping("/logs")
+    public String logs() {
+        return "Online";
+    }
+
+    @PostMapping("/logs")
+    public void consoleLog(@RequestBody ConsoleLog consoleLog) {
+        if("ERROR".equalsIgnoreCase(consoleLog.getLevel())) {
+            LOG.error(consoleLog.getLine());
+        } else if("WARN".equalsIgnoreCase(consoleLog.getLevel())) {
+            LOG.warn(consoleLog.getLine());
+        } else if("INFO".equalsIgnoreCase(consoleLog.getLevel())) {
+            LOG.info(consoleLog.getLine());
+        } else if("DEBUG".equalsIgnoreCase(consoleLog.getLevel())) {
+            LOG.debug(consoleLog.getLine());
+        } else if("TRACE".equalsIgnoreCase(consoleLog.getLevel())) {
+            LOG.trace(consoleLog.getLine());
+        }
     }
 
 }

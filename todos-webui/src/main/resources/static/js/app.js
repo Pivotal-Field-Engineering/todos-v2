@@ -19,6 +19,39 @@
         }
     };
 
+    // ERROR, WARN, INFO, DEBUG, or TRACE
+    const Logger = {
+        error: function () {
+            const user = "Nacho";
+            this.callApi('ERROR', "UI(" + user + ")|" + arguments[0]);
+        },
+        warn: function () {
+            const user = "Nacho";
+            this.callApi('WARN', "UI(" + user + ")|" + arguments[0]);
+        },
+        info: function () {
+            const user = "Nacho";
+            this.callApi('INFO', "UI(" + user + ")|" + arguments[0]);
+        },
+        debug: function () {
+            const user = "Nacho";
+            this.callApi('DEBUG', "UI(" + user + ")|" + arguments[0]);
+        },
+        trace: function () {
+            const user = "Nacho";
+            this.callApi('TRACE', "UI(" + user + ")|" + arguments[0]);
+        },
+        callApi: function(level, line) {
+            console.log(level.toUpperCase() + '|' + line);
+            Vue.http.post('/logs', {
+                level: level.toUpperCase(),
+                line: line
+            }).then(response => {
+                console.log("/logs response " + response.statusText);
+            });
+        }
+    };
+
     exports.app = new Vue({
         // the root element that will be compiled
         el: '#todoapp',
@@ -31,8 +64,11 @@
             metaSearch: '',
             editedTodo: null,
             visibility: 'all',
-            offline: false,
-            activetab: 1
+            activetab: 1,
+            logsApiOnline: false,
+            todosApiOnline: false,
+            metadataApiOnline: false,
+            aboutApiOnline: false
         },
         // watch todos change and save via API
         watch: {
@@ -41,9 +77,9 @@
                 handler: function(values) {
                     const self = this;
                     values.forEach(todo => {
-                        if(todo.id && !self.offline) {
-                            console.log("DEBUG|watchTodos|Patching todo " + todo);
-                            Vue.http.patch('/todos/' + todo.id,todo);
+                        if(todo.id && self.todosApiOnline) {
+                            Logger.debug("watchTodos|Patching todo " + JSON.stringify(todo));
+                            Vue.http.patch('/todos/' + todo.id, todo);
                         }
                     });
                 }
@@ -51,9 +87,11 @@
         },
         computed: {
             filteredTodos() {
+                Logger.trace("filteredTodos|Filtering " + this.visibility + " todos.");
                 return filters[this.visibility](this.todos);
             },
             remaining() {
+                Logger.trace("remaining|Showing active todos");
                 return filters.active(this.todos).length;
             },
             allDone: {
@@ -61,12 +99,15 @@
                     return this.remaining === 0;
                 },
                 set: function (value) {
+                    Logger.debug("allDone|marking all todos complete");
                     this.todos.forEach(function (todo) {
+                        Logger.trace("allDone|marking todo " + todo.title + " complete");
                         todo.complete = value;
                     });
                 }
             },
             filteredMetadata() {
+                Logger.trace("filteredMetadata|Filtering metadata on " + this.metaSearch);
                 const searchFilter = meta =>
                     meta.property.includes(this.metaSearch)
                         ||
@@ -74,14 +115,13 @@
                 return this.metadata.filter(searchFilter);
             }
         },
-        // methods that implement data logic.
-        // note there's no DOM manipulation here at all.
+        // no DOM manipulation, just logic
         methods: {
             pluralize: function (word, count) {
                 return word + (count === 1 ? '' : 's');
             },
             addTodo: function () {
-                console.log("DEBUG|addTodo|adding new todo");
+                Logger.debug("addTodo|adding new todo");
                 const value = this.newTodo && this.newTodo.trim();
                 if (!value) {
                     return;
@@ -92,47 +132,52 @@
                 });
                 this.newTodo = '';
             },
-            //ERROR, WARN, INFO, DEBUG, or TRACE.
             createTodo: function(todo) {
                 const self = this;
-                if(!self.offline) {
-                    console.log("DEBUG|createTodo|API online");
-                    console.log("DEBUG|createTodo|Posting new todo " + todo);
+                if(self.todosApiOnline) {
+                    Logger.debug("createTodo|API online");
+                    Logger.debug("createTodo|Posting new todo " + JSON.stringify(todo));
                     Vue.http.post('/todos/', {
                         title: todo.title,
                         complete: todo.complete
                     }).then(response => {
-                        console.log("DEBUG|createTodo|Response OK");
+                        Logger.debug("createTodo|Response " + response.statusText);
                         self.todos.unshift(response.body);
                     });
                 } else {
-                    console.log("WARN|createTodo|API OFFLINE saving to local storage");
+                    Logger.warn("createTodo|API OFFLINE saving to local storage");
                     self.todos.unshift(todo);
                 }
             },
             removeTodo: function (todo) {
                 const self = this;
-                if(!self.offline) {
-                    console.log("DEBUG|removeTodo|API online");
-                    console.log("DEBUG|removeTodo|Removing todo " + todo.id);
+                if(self.todosApiOnline) {
+                    Logger.debug("removeTodo|API online");
+                    Logger.debug("removeTodo|Removing todo " + todo.title);
                     Vue.http.delete( '/todos/' + todo.id).then(() => {
-                        console.log("TRACE|removeTodo|Re-indexing todos");
+                        Logger.trace("removeTodo|Re-indexing todos");
                         const index = self.todos.indexOf(todo);
                         self.todos.splice(index, 1);
-                        console.log("TRACE|removeTodo|Re-indexing complete");
+                        Logger.trace("removeTodo|Re-indexing complete");
                     });
                 } else {
-                    console.log("DEBUG|removeTodo|API OFFLINE removing from local storage");
+                    Logger.debug("removeTodo|API OFFLINE removing from local storage");
                     const index = self.todos.indexOf(todo);
                     self.todos.splice(index, 1);
                 }
             },
+            toggleComplete: function (todo) {
+                Logger.info("toggleComplete|Toggling todo " + todo.title + " to "
+                    + (!todo.complete ? "complete " : "active")
+                );
+                todo.complete = !todo.complete;
+            },
             editTodo: function (todo) {
                 if(todo.complete) {
-                    console.log("ERROR|editTodo|Can't edit a complete todo amigo");
+                    Logger.error("editTodo|Can't edit a complete todo amigo");
                     return;
                 }
-                console.log("DEBUG|editTodo|Editing todos " + todo.id);
+                Logger.debug("editTodo|Editing todos " + todo.title);
                 this.beforeEditCache = todo.title;
                 this.editedTodo = todo;
             },
@@ -140,61 +185,79 @@
                 if (!this.editedTodo) {
                     return;
                 }
+                Logger.debug("doneEdit|Editing complete " + this.editedTodo.title);
                 this.editedTodo = null;
                 todo.title = todo.title.trim();
                 if (!todo.title) {
                     this.removeTodo(todo);
                 }
-                console.log("DEBUG|doneEdit|Editing complete " + todo.id);
             },
             cancelEdit: function (todo) {
                 this.editedTodo = null;
                 todo.title = this.beforeEditCache;
-                console.log("DEBUG|cancelEdit|Editing cancelled " + todo.id);
+                Logger.debug("cancelEdit|Editing cancelled " + todo.title);
             },
             removeCompleted: function () {
                 this.todos = filters.active(this.todos);
             }
         },
-        // run before mounting to see if API is enabled or not
         beforeMount() {
             const self = this;
-            Vue.http.get('/todos/').then(response => {
-                const list = JSON.parse(response.bodyText);
-                list.forEach(item => {
-                    self.todos.unshift(item);
-                });
-                console.log("INFO|beforeMount|/todos is online, saving to API");
+            Vue.http.get('/logs').then(response => {
+                if(response.status === 200) {
+                    Logger.info("beforeMount|/logs API is online");
+                    self.logsApiOnline = true;
+                }
             }, response => {
-                if(response.status===404) {
-                    // api offline, save local only
-                    console.log("WARN|beforeMount|/todos is offline, saving to local storage");
-                    self.offline = true;
+                if(response.status === 404) {
+                    Logger.warn("beforeMount|/logs API is offline");
+                    self.logsApiOnline = false;
+                }
+            });
+            Vue.http.get('/todos/').then(response => {
+                if(response.status === 200 || response.status === 204) {
+                    const list = JSON.parse(response.bodyText);
+                    list.forEach(item => {
+                        self.todos.unshift(item);
+                    });
+                    Logger.info("beforeMount|/todos API is online");
+                    self.todosApiOnline = true;
+                }
+            }, response => {
+                if(response.status === 404) {
+                    Logger.warn("beforeMount|/todos is offline, saving to local storage");
+                    self.todosApiOnline = false;
                 }
             });
             Vue.http.get('/metadata').then(response => {
-                const list = JSON.parse(response.bodyText);
-                list.forEach(item => {
-                    self.metadata.push(item);
-                });
-                console.log("INFO|beforeMount|/metadata is online");
+                if(response.status === 200) {
+                    const list = JSON.parse(response.bodyText);
+                    list.forEach(item => {
+                        self.metadata.push(item);
+                    });
+                    Logger.info("beforeMount|/metadata is online");
+                    self.metadataApiOnline = true;
+                }
             }, response => {
                 if(response.status===404) {
-                    console.log("WARN|beforeMount|/metadata is offline");
+                    Logger.warn("beforeMount|/metadata is offline");
+                    self.metadataApiOnline = false;
                 }
             });
             Vue.http.get('/about').then(response => {
-                self.buildInformation = JSON.parse(response.bodyText);
-                console.log("INFO|beforeMount|/about is online");
+                if(response.status === 200) {
+                    self.buildInformation = JSON.parse(response.bodyText);
+                    Logger.info("beforeMount|/about is online");
+                    self.aboutApiOnline = true;
+                }
             }, response => {
                 if(response.status===404) {
-                    console.log("WARN|beforeMount|/about is offline");
+                    Logger.warn("beforeMount|/about is offline");
+                    self.aboutApiOnline = false;
                 }
             });
         },
-        // a custom directive to wait for the DOM to be updated
-        // before focusing on the input field.
-        // http://vuejs.org/guide/custom-directive.html
+        // wait for the DOM to be updated before focusing on the input field.
         directives: {
             'todo-focus': function (el, binding) {
                 if (binding.value) {

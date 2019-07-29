@@ -10,12 +10,13 @@
     <link rel="stylesheet" href="styles/webui/normalize.css">
     <link rel="stylesheet" href="styles/webui/fonts.css">
     <link rel="stylesheet" href="styles/webui/index.css">
-    <style> [v-cloak] {
-        display: none;
-    } </style>
+    <style> [v-cloak] { display: none; } </style>
 </head>
 <body>
 <div id="todoapp" class="todoapp" v-cloak>
+    <div class="userinfo">
+        <span th:text="'Howdy, ' + ${username}"></span>
+    </div>
     <div class="tabs">
         <a v-on:click="activetab=1" v-bind:class="[ activetab === 1 ? 'active' : '' ]">Todo(s)</a>
         <a v-on:click="activetab=2" v-bind:class="[ activetab === 2 ? 'active' : '' ]">Meta</a>
@@ -37,7 +38,7 @@
                     <li class="todo" v-for="todo in filteredTodos" :key="todo.id"
                         :class="{completed: todo.complete, editing: todo == editedTodo}">
                         <div class="view">
-                            <input class="toggle" type="checkbox" v-model="todo.complete">
+                            <input class="toggle" type="checkbox" @click="toggleComplete(todo)">
                             <label @dblclick="editTodo(todo)">{{todo.title}}</label>
                             <button class="destroy" @click="removeTodo(todo)"></button>
                         </div>

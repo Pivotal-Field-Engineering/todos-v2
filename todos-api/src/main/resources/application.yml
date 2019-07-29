@@ -1,13 +1,11 @@
 spring:
   application:
     name: todos-api
-# log levels: TRACE, DEBUG, INFO, WARN, ERROR, FATAL, or OFF
 logging:
-    level:
-        root: INFO
+  level:
+    io.todos: TRACE
 management:
   endpoints:
     web:
       exposure:
         include: '*'
-
