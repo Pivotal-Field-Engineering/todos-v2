@@ -17,3 +17,4 @@ management:
 logging:
   level:
     io.todos: TRACE
+
