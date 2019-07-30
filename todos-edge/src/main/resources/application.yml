@@ -1,25 +1,27 @@
 todos:
   api:
-    endpoint: http://localhost:8080
+    serviceId: TODOS-API
   ui:
-    endpoint: http://localhost:4040
+    serviceId: TODOS-WEBUI
 spring:
   application:
     name: todos-edge
   cloud:
     gateway:
       routes:
-      - id: todos_all_api
-        uri: ${todos.api.endpoint}
+      - id: todos_api_lb
+        uri: lb://${todos.api.serviceId}
         predicates:
         - Path=/todos/**
         filters:
-        - SetResponseHeader=X-TODOS-CLOUD-GATEWAY-ROUTE-ID, todos_all_api
+        - SetResponseHeader=X-TODOS-EDGE-ROUTE-ID, todos_api_lb
         - RewritePath=/todos/(?<path>.*), /$\{path}
-      - id: todos_ui_root
-        uri: ${todos.ui.endpoint}
+      - id: todos_webui_lb
+        uri: lb://${todos.ui.serviceId}
         predicates:
         - Path=/**
+  main:
+    allow-bean-definition-overriding: true
 server:
   port: 9999
 management:
