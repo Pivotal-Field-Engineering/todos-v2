@@ -4,7 +4,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>todos-edge</artifactId>
-    <version>1.0.0.SNAP</version>
     <packaging>jar</packaging>
 
     <name>todos-edge</name>
