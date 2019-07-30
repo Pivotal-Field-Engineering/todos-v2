@@ -4,3 +4,5 @@ applications:
   domain: apps.internal
   memory: 1G
   path: target/todos-webui-1.0.0.SNAP.jar
+  env:
+    SPRING_SECURITY_USER_NAME: 'Nacho'

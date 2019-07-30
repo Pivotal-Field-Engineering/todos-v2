@@ -44,7 +44,7 @@ public class TodosAPI {
     @GetMapping("/")
     public List<Todo> retrieve() {
         LOG.debug("Retrieving all todos as a List<Todo> of size " + todos.size()
-            + " todos.api.limit=" + properties.getApi().getLimit());
+                + " todos.api.limit=" + properties.getApi().getLimit());
         return new ArrayList<>(todos.values());
     }
 
@@ -65,9 +65,9 @@ public class TodosAPI {
             return todos.get(todo.getId());
         } else {
             LOG.error("Limit reached, todos list size=" + todos.size()
-                + " is >= todos.api.limit=" + properties.getApi().getLimit());
+                    + " is >= todos.api.limit=" + properties.getApi().getLimit());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                format("todos.api.limit=%d, todos.size()=%d", properties.getApi().getLimit(), todos.size()));
+                    format("todos.api.limit=%d, todos.size()=%d", properties.getApi().getLimit(), todos.size()));
         }
     }
 
@@ -111,7 +111,7 @@ public class TodosAPI {
         LOG.trace("Pulled current todo.id=" + current.getId() + " from todos List.");
         if(!ObjectUtils.isEmpty(todo.getComplete())) {
             LOG.trace("Updating todo.id=" + current.getId() + " complete field from "
-                + current.getComplete() + " to " + todo.getComplete());
+                    + current.getComplete() + " to " + todo.getComplete());
             current.setComplete(todo.getComplete());
         }
         if(!StringUtils.isEmpty(todo.getTitle())){
