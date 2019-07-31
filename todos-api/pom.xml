@@ -4,9 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>todos-api</artifactId>
-    <packaging>jar</packaging>
-
     <name>todos-api</name>
+    <packaging>jar</packaging>
     <description>Demo project for Spring Boot</description>
 
     <parent>
@@ -68,5 +67,22 @@
             </dependencies>
         </profile>
     </profiles>
+
+    <build>
+        <plugins>
+            <!-- Maven plugin that can package the project as an executable jar  -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

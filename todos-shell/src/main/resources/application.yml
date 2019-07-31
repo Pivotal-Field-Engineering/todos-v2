@@ -2,7 +2,7 @@ spring:
   application:
     name: todos-shell
 jars:
-  folder: /Users/corbs/dev/github/todos-apps/todos-cfclient/.apps/jars
+  folder: .apps/jars
 cf:
   api: api.sys.retro.io
   username: corbs

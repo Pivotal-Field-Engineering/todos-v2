@@ -6,6 +6,8 @@
 	<artifactId>todos-webui</artifactId>
 	<name>todos-webui</name>
 	<description>Todos WebUI - Spring Boot + Vue.js + API enabled Todos app</description>
+    <version>1.0.0.SNAP</version>
+    <packaging>jar</packaging>
 
 	<parent>
 		<groupId>io.todos</groupId>
@@ -13,6 +15,23 @@
 		<version>1.0.0.SNAP</version>
 		<relativePath>../</relativePath> <!-- lookup parent from repository -->
 	</parent>
+
+    <build>
+        <plugins>
+            <!-- Maven plugin that can package the project as an executable jar  -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 	<dependencies>
 		<dependency>

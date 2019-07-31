@@ -1,4 +1,4 @@
-package io.todos.api;
+package io.todos.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
