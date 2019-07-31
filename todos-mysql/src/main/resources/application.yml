@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: todos-mysql
+  flyway:
+    locations: 'classpath:/db/migration/h2'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+todos:
+  api:
+    limit: 1024
+  ids:
+    tinyId: true

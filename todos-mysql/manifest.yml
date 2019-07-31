@@ -1,0 +1,14 @@
+---
+applications:
+- name: todos-mysql
+  memory: 1G
+  path: target/todos-mysql-1.0.0.SNAP.jar
+  buildpack: java_buildpack_offline
+  services:
+  - todos-database
+  - todos-config
+  - todos-registry
+  env:
+    TRUST_CERTS: api.sys.retro.io
+    TODOS_API_LIMIT: 4096
+    SPRING_APPLICATION_NAME: todos-mysql

@@ -30,6 +30,7 @@
         <module>todos-api</module>
         <module>todos-edge</module>
         <module>todos-webui</module>
+        <module>todos-mysql</module>
     </modules>
 
     <dependencies>
