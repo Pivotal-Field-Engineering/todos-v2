@@ -1,4 +1,5 @@
-/*global Vue */
+/*global app, Vue, VueResource, Logger, Router */
+
 (function (exports) {
     'use strict';
     Vue.use(VueResource);
@@ -110,7 +111,7 @@
                 Logger.trace("filteredMetadata|Filtering metadata on " + this.metaSearch);
                 const searchFilter = meta =>
                     meta.property.includes(this.metaSearch)
-                        ||
+                    ||
                     meta.value.includes(this.metaSearch);
                 return this.metadata.filter(searchFilter);
             }
@@ -266,5 +267,25 @@
             }
         }
     });
+
+    (function (app, Router) {
+        'use strict';
+        const router = new Router();
+        ['all', 'active', 'completed'].forEach(function (visibility) {
+            router.on(visibility, function () {
+                app.visibility = visibility;
+            });
+        });
+
+        router.configure({
+            notfound: function () {
+                window.location.hash = '';
+                app.visibility = 'all';
+            }
+        });
+
+        router.init();
+    })(app, Router);
+
 
 })(window);
