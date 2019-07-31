@@ -1,0 +1,11 @@
+todos:
+  api:
+    limit: 1024
+spring:
+  application:
+    name: todos-redis
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
