@@ -31,6 +31,7 @@
         <module>todos-webui</module>
         <module>todos-mysql</module>
         <module>todos-redis</module>
+        <module>todos-webflux</module>
     </modules>
 
     <dependencies>

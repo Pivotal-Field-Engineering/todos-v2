@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: todos-webflux
+logging:
+  level:
+    io.todos: TRACE
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
