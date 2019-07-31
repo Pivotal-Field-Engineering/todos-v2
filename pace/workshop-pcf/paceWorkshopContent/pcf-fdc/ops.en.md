@@ -1,3 +1,6 @@
+### Scaling
+manual, auto
+
 ### Internal Routes on PCF
 
 We can restrict access to the Backend API and UI by removing public routes for those apps and then mapping them to an internal domain (``apps.internal``).  Once the apps have an internal route we can add a network policy that allows the Edge to call them.
@@ -64,10 +67,9 @@ We can restrict access to the Backend API and UI by removing public routes for t
 1. Open `YOUR-todos-edge` in Chrome
     * You'll have a route to your `YOUR-todos-edge` app...for example `https://your-todos-edge.apps.retro.io`
 
-### Extra mile
+### High Availability
 
-* Use [Todo(s) Shell](#todos-shell) to automate pushing the apps with private networking
-    * `shell:>push-internal --tag myinternalapp`
+### Logging and Monitoring
 
 ### Talking Points
 
