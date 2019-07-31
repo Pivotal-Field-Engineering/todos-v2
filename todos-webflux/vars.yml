@@ -1,9 +1,0 @@
-app:
-  name: todos-webflux
-  artifact: target/todos-webflux-1.0.0.SNAP.jar
-  memory: 1G
-  route: todos-webflux.apps.pcf.corbscloud.io
-env-key-1: TODOS_API_LIMIT
-env-val-1: 256
-env-key-1: EUREKA_CLIENT_ENABLED
-env-val-1: false

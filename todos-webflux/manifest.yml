@@ -1,12 +1,8 @@
 ---
 applications:
-- name: ((app.name))
-  memory: ((app.memory))
-  routes:
-  - route: ((app.route))
-  path: ((app.artifact))
-  buildpack: java_buildpack
+- name: todos-webflux
+  memory: 1G
+  path: target/todos-webflux-1.0.0.SNAP.jar
+  buildpack: java_buildpack_offline
   env:
-    ((env-key-1)): ((env-val-1))
-    ((env-key-2)): ((env-val-2))
-
+    TODOS_API_LIMIT: 1024
