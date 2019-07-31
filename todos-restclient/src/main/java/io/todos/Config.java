@@ -1,4 +1,4 @@
-package io.corbs;
+package io.todos;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
