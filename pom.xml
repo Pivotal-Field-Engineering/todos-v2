@@ -37,6 +37,8 @@
         <module>todos-sink</module>
         <module>todos-processor</module>
         <module>todos-shell</module>
+        <module>todos-webclient</module>
+        <module>todos-restclient</module>
     </modules>
 
     <dependencies>
