@@ -1,0 +1,9 @@
+---
+applications:
+- name: todos-sink
+  memory: 1G
+  path: target/todos-sink-1.0.0.SNAP.jar
+  buildpack: java_buildpack_offline
+  env:
+    JBP_CONFIG_JMX: '{enabled: true}'
+    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{ enabled: false }'

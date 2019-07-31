@@ -32,6 +32,11 @@
         <module>todos-mysql</module>
         <module>todos-redis</module>
         <module>todos-webflux</module>
+        <module>todos-loggregator</module>
+        <module>todos-source</module>
+        <module>todos-sink</module>
+        <module>todos-processor</module>
+        <module>todos-shell</module>
     </modules>
 
     <dependencies>

@@ -1,0 +1,10 @@
+# destination 'todos-out' is the rendezvous between the output and input channel
+spring:
+    cloud:
+        stream:
+            kafka:
+                binder:
+                    brokers: 'kafka.retro.io'
+            bindings:
+                input:
+                    destination: todos-out
