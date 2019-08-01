@@ -6,38 +6,7 @@ This Shop is about getting familiar with [Spring Cloud Services for PCF](https:/
 
 ### Git Repository for application config
 
-First things first is getting a git-repo that you have read/write access on to save and pull app configs.
-
-* If forking from github is an option then [fork this repository](https://github.com/corbtastik/todos-config) and clone into your samples working directory.  After the clone your samples working directory should look like so.  *Note* you may need to remove the existing `todos-config` folder in your samples working directory first.
-
-    ```bash
-    cd ~/Desktop/todos-apps
-    ls
-    > ./todos-api
-    > ./todos-app
-    > ./todos-config # from fork-clone
-    > ./todos-edge
-    > ./todos-webui
-    > ./todos-mysql
-    > ./todos-processor
-    > ./todos-redis
-    > ./todos-shell
-    > ./todos-sink
-    ```
-
-* If forking isn't an option then commit the `todos-config` folder to a new git-repo (replace `YOUR-GITHUB-ACCT` below) that you have access to.
-
-    For example:
-
-    ```bash
-    cd ~/Desktop/todos-apps/todos-config
-    rm -rf .git # to remove existing git-repo
-    git init
-    git add *.yml
-    git commit -m "Initial commit - adding all application configs"
-    git remote add origin git@github.com:YOUR-GITHUB-ACCT/todos-config.git
-    git push -u origin master
-    ```
+First things first is exploring the git-repo that will drive your config.  Browse to the `config` branch of [Todos-App git repo](https://github.com/Pivotal-Field-Engineering/todos-apps/tree/config).  
 
 ### Creating a Spring Cloud Config Service Instance
 
@@ -48,7 +17,7 @@ Use `cf create-service` to provision `YOUR` Config Service instance, passing `-c
 ```bash
 cd ~/Desktop/todos-apps/pcf-config-server
 cf create-service p-config-server standard your-todos-config \
-    -c '{"git": { "uri": "https://github.com/corbtastik/todos-config", "label": "master" } }'
+    -c '{"git": { "uri": "https://github.com/Pivotal-Field-Engineering/todos-apps", "label": "config" } }'
 # after a few moments check the status
 cf service your-todos-config
 > name:      your-todos-config
@@ -74,14 +43,10 @@ cf service your-todos-registry
 
 ### Inspect cloud branch
 
-Switch to cloud branch on `todos-edge`, `todos-api`, `todos-webui` samples, you may need to stash or commit local code changes to master branch before checking out cloud.
+Switch to cloud branch; you may need to stash or commit local code changes to master branch before checking out cloud.
 
 ```bash
-cd ~/Desktop/todos-apps/todos-api
-git checkout cloud
-cd ~/Desktop/todos-apps/todos-edge
-git checkout cloud
-cd ~/Desktop/todos-apps/todos-webui
+cd ~/Desktop/todos-apps/
 git checkout cloud
 ```
 
@@ -126,13 +91,7 @@ Each `pom.xml` on the `cloud` branch will contain these Spring Cloud Services de
 ```bash
 # change into your working directory (i.e. todos-apps)
 cd ~/Desktop/todos-apps
-cd todos-api
 ./mvnw clean package
-cd ../todos-edge
-./mvnw clean package
-cd ../todos-webui
-./mvnw clean package
-cd ..
 ```
 
 ### Configure manifests for Spring Cloud apps
