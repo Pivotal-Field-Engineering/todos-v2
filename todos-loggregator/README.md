@@ -102,15 +102,15 @@ cf push -f manifest-kafka.yml
 
 ## Use
 
-The application exposes 2 control methods, start and stop.  Both are `PUT` operations and take an `applicationId` which is the UUID of the PCF application to stream events for.
+The application exposes 2 control methods, `start` and `stop`.  Both are `PUT` operations and take an `applicationId` which is the UUID of the PCF application to stream events for.
 
-When the application receives a request to start streaming it opens a Reactive Stream to the PCF Doppler system and subscribes to events for the given applicationId.  The Reactive Stream reference is maintained in a local context, which can be used to dispose of the Reactive Stream at a later point in time.  For example by calling `stop`.
+When `todos-loggregator` receives a request to start streaming it opens a Reactive Stream to the PCF Doppler system and subscribes to events for the given applicationId.  The Reactive Stream reference is maintained in a local context, which can be used to dispose of the Reactive Stream at a later point in time.  For example by calling `stop`.
 
-Be mindful how many applications you stream logs with, this is merely a sample and the code does not stop you from streaming out many applications.  All that to say the more application you start stream for the more `chatty` this application will become.
+Be mindful how many applications you stream logs with, this is merely a sample and the code does not stop you from streaming out many applications.  All that to say the more applications you start stream for the more **chatty** this application will become.
 
 The primary function of this application is to source 3 different topics with events.
 
-Streaming data from Doppler gets sourced as 1 of 3 types, which can be consumed by downstream applications.
+Raw data from Doppler gets converted to 1 of 3 types of events which can be consumed by downstream applications.
 
 1. Contianer Metrics (`destination=todos-container-metrics`)
 1. Log Event Messages (`destination=todos-logs`)
@@ -125,6 +125,8 @@ http PUT todos-loggregator.apps.retro.io/start/40d7b8d6-6f89-49c0-bd34-c137cdd6c
 ```
 
 Once started the output destinations defined in `application.yml` will receive targeted events (Container Metric, Log or Error).  This should be evident by monitoring the topic activity in Kafka (Confluent Control Center is an easy option).
+
+<img src="../todos-docs/docs/todos-workshop/img/todos-loggregator-kafka.png" width="70%">
 
 Make a `PUT` request to the `stop` endpoint to dispose of the stream source.
 
