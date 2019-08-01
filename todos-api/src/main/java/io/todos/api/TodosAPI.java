@@ -128,4 +128,10 @@ public class TodosAPI {
         LOG.info("Checking Limit, todos.size=" + this.todos.size() + " todos.api.limit=" + properties.getApi().getLimit());
         return Limit.builder().size(this.todos.size()).limit(properties.getApi().getLimit()).build();
     }
+
+    @GetMapping("/kill")
+    public void kill() {
+        LOG.debug("Killing the process.  BYE!!");
+        System.exit(1);
+    }
 }
