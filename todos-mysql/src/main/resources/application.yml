@@ -6,6 +6,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  data:
+    rest:
+      base-path: '/actuator/data'
 management:
   endpoints:
     web:
