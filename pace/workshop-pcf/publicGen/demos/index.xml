@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Demos on Pivotal Workshop</title>
+    <link>/demos/</link>
+    <description>Recent content in Demos on Pivotal Workshop</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="/demos/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Prerequisites and Sample Overview</title>
+      <link>/demos/prereq-overview/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/demos/prereq-overview/</guid>
+      <description>Audience This content is intended for anyone wanting a sound understanding of Spring Boot on PCF or for anyone wanting to hack around a simple model and get to know salient features of both.
+PreReqs Development Each project can be cloned, built and pushed to PCF individually. All that&amp;rsquo;s required to work with projects locally are listed below.
+ Java 8 JDK (sdkman is a nice dev option)
+ Be able to run java and javac from cli</description>
+    </item>
+    
+    <item>
+      <title>Project Build and Initial App Deployment</title>
+      <link>/demos/build-push/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/demos/build-push/</guid>
+      <description>Introduce Todo sample set (whiteboard or slide with picture) In this Shop we&amp;rsquo;re going to build a simple 3 service App that consist of a backing API implemented in Spring Boot, a UI which is a Spring Boot vendored Vue.js app and an Edge implemented with Spring Cloud Gateway to help with application level routing.
+This Shop is plain-ole Spring Boot without Spring Cloud (which is later) and relies simply on core PCF features.</description>
+    </item>
+    
+    <item>
+      <title>Application Operations</title>
+      <link>/demos/ops/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/demos/ops/</guid>
+      <description>Scaling Applications Manual Scaling  Let’s increase the number of running application instances to for the backend API to 3:
+$ cf scale -i 3 &amp;lt;YOUR&amp;gt;-todos-api Scaling app abz-todos-api in org pivot-azwickey / space playground as azwickey@pivotal.io... OK  In reporting OK, the CLI is letting you know that the additional requested instances have been started, but they are not yet necessarily running.
+ We can determine how many instances are actually running like this:</description>
+    </item>
+    
+    <item>
+      <title>Introduce Spring Cloud Services</title>
+      <link>/demos/scs/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/demos/scs/</guid>
+      <description>Spring Cloud for Todo sample set This Shop is about getting familiar with Spring Cloud Services for PCF by adding Spring Cloud dependencies to the Todo(s) sample set. Once this Shop is complete you&amp;rsquo;ll have virtually the same deployment of apps with the added benefit of Spring Cloud to handle Configuration and Connectivity.
+Git Repository for application config First things first is exploring the git-repo that will drive your config.</description>
+    </item>
+    
+  </channel>
+</rss>

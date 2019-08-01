@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Project Build and Initial App Deployment - Pivotal Workshop</title>
+<meta name="generator" content="Hugo 0.56.0-DEV" />
+<link rel="icon" href="/images/favicon.png" type="image/x-icon">
+<link href="index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="/demos/build-push/">
+<link rel="stylesheet" href="/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="/js/functions.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="/js/jquery.backtothetop/jquery.backtothetop.min.js"></script>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-120591772-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+</head>
+<body>
+<div class="container"><header>
+ <div style="height: 100%; width: 100%;">
+<img src="/images/pa-logo.png" alt="Platform Architecture" style="height: 40px; width: 53px; vertical-align: middle;">
+ <h1 style="vertical-align: middle;">Pivotal Workshop</h1>
+ </div>
+
+</header>
+
+<div class="content-container">
+<main><h1>Project Build and Initial App Deployment</h1>
+
+<h3 id="introduce-todo-sample-set-whiteboard-or-slide-with-picture">Introduce Todo sample set (whiteboard or slide with picture)</h3>
+
+<p>In this Shop we&rsquo;re going to build a simple 3 service App that consist of a <a href="#todos-api">backing API</a> implemented in Spring Boot, a <a href="#todos-webui">UI which is a Spring Boot vendored Vue.js app</a> and an Edge implemented with Spring Cloud Gateway to help with application level routing.</p>
+
+<p>This Shop is plain-ole Spring Boot without Spring Cloud (which is later) and relies simply on core PCF features.</p>
+
+<p>At the end of this Shop you&rsquo;ll have 3 apps running in PCF that have been manually configured to work together.</p>
+
+<p><img src="shop-1.png" alt="Shop 1" /></p>
+
+<h3 id="1-build">1. Build</h3>
+
+<p>This assumes you&rsquo;ve completed Projects Setup, if not please check that box.</p>
+
+<p>Manual steps to build.</p>
+
+<pre><code class="language-bash"># change into your working directory for the repo (i.e. todos-apps)
+cd ~/Desktop/todos-apps
+./mvnw clean package
+</code></pre>
+
+<p>A successful build puts a Spring Boot jar in each projects <code>target</code> directory, for example you should have these jars after building</p>
+
+<ul>
+<li><a href="#todos-api"><code>todos-api</code></a></li>
+<li><a href="#todos-edge"><code>todos-edge</code></a></li>
+
+<li><p><a href="#todos-webui"><code>todos-webui</code></a></p>
+
+<pre><code class="language-bash">ls -al  **/target/todos*jar
+
+-rw-r--r--  1 azwickey  staff  28521531 Jul 24 15:49 todos-api/target/todos-api-1.0.0.SNAP.jar
+-rw-r--r--  1 azwickey  staff  29580311 Jul 24 15:49 todos-edge/target/todos-edge-1.0.0.SNAP.jar
+-rw-r--r--  1 azwickey  staff  25528636 Jul 24 15:49 todos-webui/target/todos-webui-1.0.0.SNAP.jar
+
+</code></pre></li>
+</ul>
+
+<h3 id="2-push-to-pcf">2. Push to PCF</h3>
+
+<p>Pick a unique &ldquo;<strong>tag</strong>&rdquo; and stick with it throughout the workshop, in the docs and snippets below this is represented by the text <code>YOUR</code>.</p>
+
+<ul>
+<li>Configure manifests for
+
+<ul>
+<li><code>todos-api/manifest.yml</code></li>
+<li><code>todos-webui/manifest.yml</code></li>
+<li><code>todos-edge/manifest.yml</code></li>
+</ul></li>
+<li><code>cf domains</code> - to figure out which domains you fall under
+
+<ul>
+<li>In the snippet below <code>apps.retro.io</code> is the cf domain</li>
+<li>On PWS the domain would be <code>cfapps.io</code></li>
+</ul></li>
+<li><code>cf buildpacks</code> - to figure out the exact java buildpack name, its safe to remove the <code>buildpack</code> property from the <code>manifest.yml</code> files and let PCF figure out which to use
+
+<ul>
+<li>This sample set uses the <a href="https://github.com/cloudfoundry/java-buildpack">Java Buildpack</a></li>
+</ul></li>
+</ul>
+
+<h4 id="todos-api-manifest">todos-api manifest</h4>
+
+<pre><code class="language-yaml">---
+applications:
+- name: todos-api
+  memory: 1G
+  path: target/todos-api-1.0.0.SNAP.jar
+  buildpack: java_buildpack
+  env:
+    TODOS_API_LIMIT: 1024
+</code></pre>
+
+<h4 id="push-todos-api-to-pcf">Push todos-api to PCF</h4>
+
+<p>Replacing <code>YOUR</code> with your unique app tag.  <strong>Note</strong> - Leave the <code>-todos-api</code> suffix.</p>
+
+<ul>
+<li><p><code>cf push YOUR-todos-api</code></p>
+
+<pre><code class="language-bash">cd ~/Desktop/todos-apps/todos-api
+# edit todos-api/manifest.yml to your liking or simply push
+cf push your-todos-api
+# pcf will use the java buildpack to create a container image
+# and start that image up as a container instance with networking
+cf apps
+&gt; Getting apps in org retro / space arcade as corbs...
+&gt; OK
+&gt; name         state   instances memory disk urls
+&gt; your-todos-api started 1/1       1G     4G   your-todos-api.apps.retro.io
+</code></pre></li>
+
+<li><p><code>cf logs YOUR-todos-api --recent</code> - take a gander at the startup logs</p></li>
+</ul>
+
+<h4 id="todos-webui-manifest">todos-webui manifest</h4>
+
+<p>Customize the UI text entry placeholder if you wish.</p>
+
+<pre><code class="language-yaml">---
+applications:
+- name: todos-webui
+  memory: 1G
+  path: target/todos-webui-1.0.0.SNAP.jar
+  buildpack: java_buildpack
+  env:
+    TODOS_UI_PLACEHOLDER: 'Time to wash the dog?'
+</code></pre>
+
+<h4 id="push-todos-webui-to-pcf">Push todos-webui to PCF</h4>
+
+<p>Replacing <code>YOUR</code> with your unique app tag.  <strong>Note</strong> - Leave the <code>-todos-webui</code> suffix.</p>
+
+<ul>
+<li><p><code>cf push YOUR-todos-webui</code></p>
+
+<pre><code class="language-bash">cd ~/Desktop/todos-apps/todos-webui
+# edit todos-webui/manifest.yml to your liking or simply push
+cf push your-todos-webui
+# pcf will use the java buildpack to create a container image
+# and start that image up as a container instance with networking
+cf apps
+&gt; Getting apps in org retro / space arcade as corbs...
+&gt; OK
+&gt; name             state   instances memory disk urls
+&gt; your-todos-webui started 1/1       1G     4G   your-todos-webui.apps.retro.io
+</code></pre></li>
+
+<li><p>Open your todos-webui url in a browser (<a href="https://www.google.com/chrome/">Chrome recommended</a>) and notice the failed resource error.  The UI isn&rsquo;t connected to anything at this point.</p></li>
+</ul>
+
+<p><img src="todos-webui-endpoint.png" alt="Todo(s) WebUI endpoint" /></p>
+
+<h4 id="todos-edge-manifest">todos-edge manifest</h4>
+
+<p>The critical configuration here is getting the routes entered for the API and UI apps.</p>
+
+<pre><code class="language-bash">---
+applications:
+- name: YOUR-todos-edge
+  memory: 1G
+  path: target/todos-edge-1.0.0.SNAP.jar
+  env:
+  # add YOUR endpoints
+    TODOS_UI_ENDPOINT: https://YOUR-todos-webui.apps.retro.io
+    TODOS_API_ENDPOINT: https://YOUR-todos-api.apps.retro.io
+</code></pre>
+
+<h4 id="push-todos-edge-to-pcf">Push todos-edge to PCF</h4>
+
+<pre><code class="language-bash">cd ~/Desktop/todos-apps/todos-edge
+# edit todos-edge/manifest.yml with your API and UI endpoints
+cf push your-todos-edge
+# pcf will use the java buildpack to create a container image
+# and start that image up as a container instance with networking
+cf apps
+&gt; Getting apps in org retro / space arcade as corbs...
+&gt; OK
+&gt; name            state   instances memory disk urls
+&gt; your-todos-edge started 1/1       1G     4G   your-todos-edge.apps.retro.io
+</code></pre>
+
+<ul>
+<li>Open <code>todos-edge</code> in Chrome
+
+<ul>
+<li>You&rsquo;ll have a route to your <code>todos-edge</code> app&hellip;for example <code>https://your-todos-edge.apps.retro.io</code></li>
+</ul></li>
+</ul>
+
+<p><img src="todos-edge-endpoint.png" alt="Todo(s) Edge endpoint" /></p>
+
+<ul>
+<li>Create, Read, Update and Delete Todo(s) from the UI and verify all is well</li>
+<li>Slap a high-five or something as you&rsquo;ve manually completed pushing the app</li>
+</ul>
+
+<h3 id="extra-mile">Extra Mile</h3>
+
+<ul>
+<li>Create a custom route in cf and map to your <code>todos-edge</code> to <code>SOMETHING</code>
+
+<ul>
+<li><code>cf map-route your-todos-edge apps.retro.io --hostname SOMETHING</code></li>
+</ul></li>
+</ul>
+
+<p>Pause&hellip;take a quick review and field questions</p>
+
+<h3 id="talking-points">Talking Points</h3>
+
+<ul>
+<li>Intro to Spring Boot and <a href="#shop-sample-set">Sample Set</a></li>
+<li>Introduce Spring Cloud Gateway as an application edge and routing tool</li>
+<li>Code or inspect <a href="#todos-edge">Todo Edge</a>, <a href="#todos-api">Todos API</a> and <a href="#todos-webui">Todos WebUI</a> locally, inspect both master and cloud branches for differences, note cloud branch uses Spring Cloud semantics for connectivity so we can stop maintaining URIs and such.<br /></li>
+<li>Introduce WebUI and simply show it&rsquo;s a Spring Boot app vendoring a frontend Javascript/HTML/CSS app.</li>
+</ul>
+<div class="edit-meta">
+
+<br></div><nav class="pagination"><a class="nav nav-prev" href="/demos/prereq-overview/" title="Prerequisites and Sample Overview"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - Prerequisites and Sample Overview</a>
+<a class="nav nav-next" href="/demos/ops/" title="Application Operations">Next - Application Operations <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><div class="fa-copyright" style="text-align: center;">
+    ©
+    <script>
+        var d = new Date();
+        document.write(d.getFullYear());
+    </script>
+    Pivotal Software, Inc.
+    All Rights Reserved.
+</div></footer>
+</main><div class="sidebar">
+<nav>
+<ul>
+<li class=""><a href="">Home</a></li>
+
+<li class=""><a href="/concepts/">Concepts</a>
+<ul class="">
+<li class=""><a href="/concepts/pivotal-intro-slide/">Pivotal Intro</a></li>
+<li class=""><a href="/concepts/cloud-native-platform-slide/">Cloud Native Platform</a></li>
+<li class=""><a href="/concepts/cloud-native-ops-slide/">Cloud Native Operations</a></li>
+<li class=""><a href="/concepts/cloud-native-apps-slide/">Cloud Native Apps</a></li>
+<li class=""><a href="/concepts/pcf-spring-slide/">PCF &#43; Spring</a></li>
+</ul>
+  
+</li>
+
+<li class="parent"><a href="/demos/">Demos</a>
+<ul class="sub-menu">
+<li class=""><a href="/demos/prereq-overview/">Prerequisites and Sample Overview</a></li>
+<li class="active"><a href="/demos/build-push/">Project Build and Initial App Deployment</a></li>
+<li class=""><a href="/demos/ops/">Application Operations</a></li>
+<li class=""><a href="/demos/scs/">Introduce Spring Cloud Services</a></li>
+</ul>
+  
+</li>
+</ul>
+</nav>
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>
