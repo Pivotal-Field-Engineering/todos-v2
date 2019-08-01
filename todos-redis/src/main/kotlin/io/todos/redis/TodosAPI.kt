@@ -2,7 +2,6 @@ package io.todos.redis
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.CREATED
 import org.springframework.http.HttpStatus.NOT_FOUND
@@ -22,8 +21,9 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @RestController
-class TodosAPI(@Autowired @Qualifier("todosRepo") val repo: TodosRepo,
-    @Value("\${todos.api.limit}") val limit: Int) {
+class TodosAPI(
+    @Autowired @Qualifier("todosRepo") val repo: TodosRepo,
+    @Autowired val properties: TodosProperties) {
 
     @GetMapping("/")
     fun retrieve(): List<Todo> {
@@ -36,7 +36,7 @@ class TodosAPI(@Autowired @Qualifier("todosRepo") val repo: TodosRepo,
         throwIfOverLimit()
         val createObject = Todo()
         if(ObjectUtils.isEmpty(todo.id)) {
-            createObject.id = UUID.randomUUID().toString()
+            createObject.id = uuid()
         } else {
             createObject.id = todo.id
         }
@@ -66,7 +66,7 @@ class TodosAPI(@Autowired @Qualifier("todosRepo") val repo: TodosRepo,
         for(i in 1..size) {
             throwIfOverLimit()
             val todo = Todo()
-            todo.id = UUID.randomUUID().toString()
+            todo.id = uuid()
             todo.title = "make bacon pancakes $i"
             todo.complete = false
             this.repo.save(todo)
@@ -109,14 +109,20 @@ class TodosAPI(@Autowired @Qualifier("todosRepo") val repo: TodosRepo,
 
     @GetMapping("/limit")
     fun limit(): Limit {
-        return Limit(this.repo.count().toInt(), this.limit)
+        return Limit(this.repo.count().toInt(), this.properties.api.limit)
     }
 
     private fun throwIfOverLimit() {
         val count = this.repo.count()
-        if(count >= limit) {
+        if(count >= this.properties.api.limit) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "todos.api.limit=$limit, todos.size=$count")
+                    "todos.api.limit=${this.properties.api.limit}, todos.size=$count")
         }
+    }
+
+    private fun uuid(): String = if(this.properties.ids.tinyId) {
+        UUID.randomUUID().toString().substring(0, 8)
+    } else {
+        UUID.randomUUID().toString()
     }
 }
