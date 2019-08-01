@@ -1,0 +1,4 @@
+# todos-api default profile properties
+todos:
+  api:
+    limit: 1000
