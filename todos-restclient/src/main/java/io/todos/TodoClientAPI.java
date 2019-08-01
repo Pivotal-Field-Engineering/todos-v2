@@ -3,9 +3,17 @@ package io.todos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,12 +42,15 @@ public class TodoClientAPI {
 
     @GetMapping("/")
     public List<Todo> retrieve() {
-        ResponseEntity<List> responseEntity = this.restTemplate.getForEntity("/", List.class);
-        return responseEntity.getBody();
+        ResponseEntity<List<Todo>> response = restTemplate.exchange("/",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Todo>>(){});
+        return response.getBody();
     }
 
     @GetMapping("/{id}")
-    public Todo retrieve(@PathVariable Integer id) {
+    public Todo retrieve(@PathVariable String id) {
         Todo todo;
         try {
             todo = restTemplate.getForObject("/{id}", Todo.class, id);
@@ -47,7 +58,7 @@ public class TodoClientAPI {
             if (HttpStatus.NOT_FOUND != ex.getStatusCode()) {
                 throw ex;
             }
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, format("todo.id=%d", id));
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, format("todo.id=%s", id));
         }
 
         return todo;
@@ -59,12 +70,12 @@ public class TodoClientAPI {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable String id) {
         this.restTemplate.delete("/{id}", id);
     }
 
     @PatchMapping("/{id}")
-    public Todo update(@PathVariable Integer id, @RequestBody Todo todo) {
+    public Todo update(@PathVariable String id, @RequestBody Todo todo) {
         Todo updated;
         try {
             updated = this.restTemplate.patchForObject("/{id}", todo, Todo.class, id);
@@ -72,7 +83,7 @@ public class TodoClientAPI {
             if (HttpStatus.NOT_FOUND != ex.getStatusCode()) {
                 throw ex;
             }
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, format("todo.id=%d", id));
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, format("todo.id=%s", id));
         }
 
         return updated;

@@ -1,0 +1,8 @@
+---
+applications:
+- name: todos-loggregator
+  memory: 1G
+  path: target/todos-loggregator-1.0.0.SNAP.jar
+  buildpack: java_buildpack_offline
+  services:
+  - messaging-service

@@ -7,7 +7,6 @@
     <artifactId>todos-parent</artifactId>
     <version>1.0.0.SNAP</version>
     <packaging>pom</packaging>
-
     <name>todos-parent</name>
     <description>Demo project for Spring Boot</description>
 

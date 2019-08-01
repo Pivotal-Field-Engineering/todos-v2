@@ -1,6 +1,9 @@
 spring:
     cloud:
         stream:
+            kafka:
+                binder:
+                    brokers: 'kafka.retro.io'
             bindings:
                 logEvents:
                     destination: todos-logs
@@ -11,7 +14,7 @@ spring:
 cf:
     api: api.sys.retro.io
     username: corbs
-    password: changeme
+    password: howdy
     organization: retro
     space: arcade
     domain: apps.retro.io

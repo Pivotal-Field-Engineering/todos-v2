@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 class Todo {
-    private Integer id;
+    private String id;
     private String title = "";
     private Boolean completed = Boolean.FALSE;
 }
