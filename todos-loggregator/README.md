@@ -82,7 +82,7 @@ cf push -f manifest-rabbitmq.yml
 
 ### With Kafka
 
-If using Kafka make sure you build with `./mvnw clean package -P kafka` and provide the right configuration for the Kafka broker.  Since we're directly configuring the broker we opt out on Spring Auto Reconfiguration provided by the Java Buildpack.  This disables rewriting of beans for PCF backing services since we're not using them for brokering Kafka connectivity.
+If using Kafka make sure you build with `./mvnw clean package -P kafka` and provide the right configuration for the Kafka broker.  Since we're directly configuring the broker we opt out on [Spring Auto Reconfiguration](https://github.com/cloudfoundry/java-buildpack-auto-reconfiguration) provided by the Java Buildpack.  This [disables rewriting of beans](https://github.com/cloudfoundry/java-buildpack-auto-reconfiguration) for PCF backing services since we're not using them for brokering Kafka connectivity.
 
 ```yaml
 ---
