@@ -1,8 +1,6 @@
 package io.todos.shell;
 
 import org.cloudfoundry.doppler.Envelope;
-import org.cloudfoundry.doppler.FirehoseRequest;
-import org.cloudfoundry.doppler.RecentLogsRequest;
 import org.cloudfoundry.doppler.StreamRequest;
 import org.cloudfoundry.operations.CloudFoundryOperations;
 import org.cloudfoundry.operations.applications.ApplicationSummary;
@@ -10,14 +8,13 @@ import org.cloudfoundry.operations.applications.PushApplicationRequest;
 import org.cloudfoundry.operations.applications.SetEnvironmentVariableApplicationRequest;
 import org.cloudfoundry.operations.applications.StartApplicationRequest;
 import org.cloudfoundry.operations.organizations.OrganizationSummary;
-import org.cloudfoundry.operations.routes.MapRouteRequest;
-import org.cloudfoundry.operations.routes.UnmapRouteRequest;
 import org.cloudfoundry.operations.services.BindServiceInstanceRequest;
 import org.cloudfoundry.operations.services.ServiceInstanceSummary;
 import org.cloudfoundry.operations.spaces.SpaceSummary;
 import org.cloudfoundry.reactor.doppler.ReactorDopplerClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -49,13 +46,17 @@ public class ShellCommands {
     // cf operations API
     private CloudFoundryOperations cf;
     private ReactorDopplerClient dopplerClient;
+    // spring application context
+    private ApplicationContext context;
 
     // autowire operations instance
     @Autowired
-    public ShellCommands(CloudFoundryOperations operations,
+    public ShellCommands(ApplicationContext context,
+        CloudFoundryOperations operations,
         ReactorDopplerClient dopplerClient) {
         this.cf = operations;
         this.dopplerClient = dopplerClient;
+        this.context = context;
     }
 
     @ShellMethod("get a log stream")
@@ -65,112 +66,35 @@ public class ShellCommands {
         stream.subscribe(System.out::println);
     }
 
-
-    @ShellMethod("push with api")
-    public void pushApp(
+    @ShellMethod("Simple Todo App Deploy")
+    public void push(
             @ShellOption(help = "tag for hostname") String tag,
             @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version) {
-
-        if (tag.length() < 1) {
-            tag = UUID.randomUUID().toString().substring(0, 8);
-        }
-
-        // push api
-        pushApplication(tag + "-todos-api",
-                Paths.get(jarsFolder + "/todos-api-" + version + ".jar"))
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-api").build())).subscribe();
-
-        // push webui
-        pushApplication(tag + "-todos-webui",
-                Paths.get(jarsFolder, "todos-webui-" + version + ".jar").toFile().toPath())
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-webui").build())).subscribe();
-
-        // push edge and manually config UI and API endpoints in edge's ENV
-        pushApplication(tag + "-todos-edge",
-                Paths.get(jarsFolder, "todos-edge-" + version + ".jar").toFile().toPath())
-                .then(this.cf.applications()
-                        .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
-                                .name(tag + "-todos-edge")
-                                .variableName("TODOS_UI_ENDPOINT")
-                                .variableValue("http://" + tag + "-todos-webui." + cfDomain)
-                                .build()))
-                .then(this.cf.applications()
-                        .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
-                                .name(tag + "-todos-edge")
-                                .variableName("TODOS_API_ENDPOINT")
-                                .variableValue("http://" + tag + "-todos-api." + cfDomain)
-                                .build()))
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-edge").build())).subscribe();
+        context.getBean(SimpleDeployCommand.class).push(tag, version);
     }
 
-    @ShellMethod("push with private networking")
-    public void pushInternal(
+    @ShellMethod("Simple Todo App Deploy with private networking")
+    public void pushPrivate(
             @ShellOption(help = "tag for hostname") String tag,
             @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version,
             @ShellOption(help = "internal domain (ex: apps.internal", defaultValue = "apps.internal") String internalDomain) {
+        context.getBean(PrivateNetworkingDeployCommand.class).push(tag, version,internalDomain);
+    }
 
-        // push api with internal route
-        pushApplication(tag + "-todos-api",
-                Paths.get(jarsFolder, "todos-api-" + version + ".jar").toFile().toPath())
-                .then(this.cf.routes()
-                        .map(MapRouteRequest.builder()
-                                .applicationName(tag + "-todos-api")
-                                .domain(internalDomain)
-                                .host(tag + "-todos-api")
-                                .build()))
-                .then(this.cf.routes()
-                        .unmap(UnmapRouteRequest.builder()
-                                .applicationName(tag + "-todos-api")
-                                .domain(this.cfDomain)
-                                .host(tag + "-todos-api")
-                                .build()))
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-api").build())).subscribe();
+    @ShellMethod("Todo App with MySQL Deploy")
+    public void pushMySQL(
+            @ShellOption(help = "tag for hostname") String tag,
+            @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version,
+            @ShellOption(help = "mysql service instance name (ex: todos-database)", defaultValue = "todos-database") String serviceInstance) {
+        context.getBean(SimpleMySqlDeployCommand.class).push(tag, version, serviceInstance);
+    }
 
-        // push webui with internal route
-        pushApplication(tag + "-todos-webui",
-                Paths.get(jarsFolder, "todos-webui-" + version + ".jar").toFile().toPath())
-                .then(this.cf.routes()
-                        .map(MapRouteRequest.builder()
-                                .applicationName(tag + "-todos-webui")
-                                .domain(internalDomain)
-                                .host(tag + "-todos-webui")
-                                .build()))
-                .then(this.cf.routes()
-                        .unmap(UnmapRouteRequest.builder()
-                                .applicationName(tag + "-todos-webui")
-                                .domain(this.cfDomain)
-                                .host(tag + "-todos-webui")
-                                .build()))
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-webui").build())).subscribe();
-
-        // push edge and config UI and API endpoints in edge's ENV
-        pushApplication(tag + "-todos-edge",
-                Paths.get(jarsFolder, "todos-edge-" + version + ".jar").toFile().toPath())
-                .then(this.cf.applications()
-                        .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
-                                .name(tag + "-todos-edge")
-                                .variableName("TODOS_UI_ENDPOINT")
-                                .variableValue("http://" + tag + "-todos-webui.apps.internal:8080")
-                                .build()))
-                .then(this.cf.applications()
-                        .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
-                                .name(tag + "-todos-edge")
-                                .variableName("TODOS_API_ENDPOINT")
-                                .variableValue("http://" + tag + "-todos-api.apps.internal:8080")
-                                .build()))
-                .then(this.cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-edge").build())).subscribe();
+    @ShellMethod("Todo App with Redis Deploy")
+    public void pushRedis(
+            @ShellOption(help = "tag for hostname") String tag,
+            @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version,
+            @ShellOption(help = "redis service instance name (ex: todos-redis)", defaultValue = "todos-redis") String serviceInstance) {
+        context.getBean(SimpleRedisDeployCommand.class).push(tag, version, serviceInstance);
     }
 
     @ShellMethod("push with spring-cloud")
@@ -263,49 +187,6 @@ public class ShellCommands {
                                 .name(tag + "-todos-edge").build())).subscribe();
     }
 
-    @ShellMethod("push with mysql")
-    public void pushMySQL(
-            @ShellOption(help = "tag for hostname") String tag,
-            @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version,
-            @ShellOption(help = "mysql service instance name (ex: todos-database)", defaultValue = "todos-database") String serviceInstance) {
-
-        // push mysql backend app
-        pushApplication(tag + "-todos-mysql",
-                Paths.get(jarsFolder, "todos-mysql-" + version + ".jar").toFile().toPath())
-                .then(this.cf.services().bind(BindServiceInstanceRequest.builder()
-                        .applicationName(tag + "-todos-mysql")
-                        .serviceInstanceName(serviceInstance)
-                        .build()))
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-mysql").build())).subscribe();
-
-        // push webui
-        pushApplication(tag + "-todos-webui",
-                Paths.get(jarsFolder, "todos-webui-" + version + ".jar").toFile().toPath())
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-webui").build())).subscribe();
-
-        // push edge and manually config UI and API endpoints in edge's ENV
-        pushApplication(tag + "-todos-edge",
-                Paths.get(jarsFolder, "todos-edge-" + version + ".jar").toFile().toPath())
-                .then(this.cf.applications()
-                        .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
-                                .name(tag + "-todos-edge")
-                                .variableName("TODOS_UI_ENDPOINT")
-                                .variableValue("http://" + tag + "-todos-webui." + cfDomain)
-                                .build()))
-                .then(this.cf.applications()
-                        .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
-                                .name(tag + "-todos-edge")
-                                .variableName("TODOS_API_ENDPOINT")
-                                .variableValue("http://" + tag + "-todos-mysql." + cfDomain)
-                                .build()))
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-edge").build())).subscribe();
-    }
 
     @ShellMethod("push with spring-cloud and redis")
     public void pushScsMySQL(
@@ -403,49 +284,7 @@ public class ShellCommands {
                                 .name(tag + "-todos-edge").build())).subscribe();
     }
 
-    @ShellMethod("push with redis")
-    public void pushRedis(
-            @ShellOption(help = "tag for hostname") String tag,
-            @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version,
-            @ShellOption(help = "redis service instance name (ex: todos-redis)", defaultValue = "todos-redis") String serviceInstance) {
 
-        // push redis backend app
-        pushApplication(tag + "-todos-redis",
-                Paths.get(jarsFolder, "todos-redis-" + version + ".jar").toFile().toPath())
-                .then(this.cf.services().bind(BindServiceInstanceRequest.builder()
-                        .applicationName(tag + "-todos-redis")
-                        .serviceInstanceName(serviceInstance)
-                        .build()))
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-redis").build())).subscribe();
-
-        // push webui
-        pushApplication(tag + "-todos-webui",
-                Paths.get(jarsFolder, "todos-webui-" + version + ".jar").toFile().toPath())
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-webui").build())).subscribe();
-
-        // push edge and manually config UI and API endpoints in edge's ENV
-        pushApplication(tag + "-todos-edge",
-                Paths.get(jarsFolder, "todos-edge-" + version + ".jar").toFile().toPath())
-                .then(this.cf.applications()
-                        .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
-                                .name(tag + "-todos-edge")
-                                .variableName("TODOS_UI_ENDPOINT")
-                                .variableValue("http://" + tag + "-todos-webui." + cfDomain)
-                                .build()))
-                .then(this.cf.applications()
-                        .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
-                                .name(tag + "-todos-edge")
-                                .variableName("TODOS_API_ENDPOINT")
-                                .variableValue("http://" + tag + "-todos-redis." + cfDomain)
-                                .build()))
-                .then(cf.applications()
-                        .start(StartApplicationRequest.builder()
-                                .name(tag + "-todos-edge").build())).subscribe();
-    }
 
     @ShellMethod("push with spring-cloud and redis")
     public void pushScsRedis(
@@ -728,7 +567,7 @@ public class ShellCommands {
         return cf.services().listInstances().map(ServiceInstanceSummary::getName).collectList().block();
     }
 
-    private Mono<Void> pushApplication(String name, Path application) {
+    Mono<Void> pushApplication(String name, Path application) {
         return cf.applications()
                 .push(PushApplicationRequest.builder()
                         .noStart(true)

@@ -68,6 +68,14 @@
         </profile>
     </profiles>
 
+    <dependencies>
+        <!-- distributed tracing -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <!-- Maven plugin that can package the project as an executable jar  -->

@@ -6,7 +6,7 @@ jars:
 cf:
   api: api.sys.retro.io
   username: corbs
-  password: changeme-or-pass-cli-arg
+  password: howdy
   organization: retro
   space: arcade
   domain: apps.retro.io
