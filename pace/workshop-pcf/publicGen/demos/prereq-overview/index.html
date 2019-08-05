@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Prerequisites and Sample Overview - Pivotal Workshop</title>
+<meta name="generator" content="Hugo 0.56.0-DEV" />
+<link rel="icon" href="/images/favicon.png" type="image/x-icon">
+<link href="index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="/demos/prereq-overview/">
+<link rel="stylesheet" href="/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="/js/functions.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="/js/jquery.backtothetop/jquery.backtothetop.min.js"></script>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-120591772-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+</head>
+<body>
+<div class="container"><header>
+ <div style="height: 100%; width: 100%;">
+<img src="/images/pa-logo.png" alt="Platform Architecture" style="height: 40px; width: 53px; vertical-align: middle;">
+ <h1 style="vertical-align: middle;">Pivotal Workshop</h1>
+ </div>
+
+</header>
+
+<div class="content-container">
+<main><h1>Prerequisites and Sample Overview</h1>
+
+<h2 id="audience">Audience</h2>
+
+<p>This content is intended for anyone wanting a sound understanding of Spring Boot on PCF or for anyone wanting to hack around a simple model and get to know salient features of both.</p>
+
+<h2 id="prereqs">PreReqs</h2>
+
+<h3 id="development">Development</h3>
+
+<p>Each project can be cloned, built and pushed to <a href="https://pivotal.io/platform">PCF</a> individually.  All that&rsquo;s required to work with projects locally are listed below.</p>
+
+<ul>
+<li><p>Java 8 JDK (<a href="https://sdkman.io/sdks#java">sdkman</a> is a nice dev option)</p>
+
+<ul>
+<li><p>Be able to run <code>java</code> and <code>javac</code> from cli</p>
+
+<pre><code class="language-bash">&gt; java -version
+openjdk version &quot;1.8.0_212&quot;
+OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_212-b03)
+OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.212-b03, mixed mode)
+
+&gt; javac -version
+javac 1.8.0_212
+</code></pre></li>
+</ul></li>
+
+<li><p><a href="https://git-scm.com/downloads">Git client</a> to clone projects</p></li>
+
+<li><p><a href="https://github.com/cloudfoundry/cli">Cloud Foundry CLI</a> - install for your platform.  If you have access to <a href="https://docs.pivotal.io/pivotalcf/console/index.html">Pivotal Apps Manager</a> you can download the latest cf-cli from the Tools menu.  Check cf-cli version.</p>
+
+<pre><code class="language-bash">&gt; cf -v
+cf version 6.46.0+29d6257f1.2019-07-09
+</code></pre></li>
+
+<li><p>A Browser - <a href="https://www.google.com/chrome/">Chrome Recommended</a></p></li>
+
+<li><p><a href="https://curl.haxx.se/">Curl</a> or <a href="https://httpie.org/">Httpie</a> - for being able to manually send various api/app requests.  <a href="https://www.getpostman.com/">Post Man</a> or any http client you&rsquo;re comfortable with is fine.</p>
+
+<pre><code class="language-bash"># for example use Httpie to update a todo
+http PATCH myscs-todos-app.apps.retro.io/f76bebbe \
+    title=&quot;WATCH all-star game #mlb&quot;
+# or list application routes in spring-cloud-gateway component
+http foo-todos-edge.apps.retro.io/actuator/gateway/routes
+# or curl to encrypt text via spring-cloud config-server
+curl -H &quot;Authorization: $(cf oauth-token)&quot; https://config-721a0c02-2ec8-466b-bead-fd127b72d464.apps.retro.io/encrypt -d 'Howdy' -k
+</code></pre></li>
+
+<li><p>An editor or IDE - All projects were created from the <a href="https://start.spring.io">Spring Initialzr</a> as Maven for build and Java or Kotlin as the language.  Any editor or IDE will do.  You can use IntelliJ or another IDE such as Eclipse and the source syntax highlighting might show red on generated POJO methods (such as <code>todos.getTitle()</code>) unless a Lombok Plugin is added.  In any case you should still be able to edit code and do IDE&rsquo;less maven builds with or without an IDE plugin&hellip;that said make your IDE happy :)</p>
+
+<ul>
+<li><a href="https://projectlombok.org/setup/intellij">IntelliJ Lombok Plugin</a></li>
+<li><a href="https://projectlombok.org/setup/eclipse">Eclipse and Spring Tools Suite Lombok Plugin</a></li>
+<li><a href="https://projectlombok.org/setup/vscode">Visual Studio Code Lombok Plugin</a></li>
+</ul>
+
+<p><img src="lombok-plugin.png" alt="" /></p></li>
+
+<li><p>Connectivity to Maven and Spring Repositories - you may need to configure a <a href="https://CHANGEME">Maven Proxy</a></p></li>
+
+<li><p>(Optional) Maven 3 (try <a href="https://sdkman.io/sdks#maven">sdkman</a>) - all projects use the <a href="https://github.com/takari/maven-wrapper">Maven Wrapper</a> so maven installation is optional.</p></li>
+
+<li><p>(Optional) <a href="https://www.gnu.org/software/make/">Make</a> - for quick clone and other ready made commands</p></li>
+</ul>
+
+<h3 id="pivotal-cloud-foundry">Pivotal Cloud Foundry</h3>
+
+<ol>
+<li><a href="https://docs.pivotal.io/pivotalcf/2-5">Pivotal Application Service 2.5 and up</a></li>
+<li><a href="https://docs.pivotal.io/p-mysql/2-5/index.html">MySQL for PCF 2.5 and up</a></li>
+<li><a href="https://docs.pivotal.io/rabbitmq-cf/1-15/index.html">RabbitMQ for PCF 1.15 and up</a></li>
+<li><a href="https://docs.pivotal.io/redis/2-0/index.html">Redis for PCF 2.0 and up</a></li>
+<li><a href="https://docs.pivotal.io/spring-cloud-services/2-0/common/index.html">Spring Cloud Services for PCF 2.0.x</a></li>
+<li>An account on PCF with Space Developer access</li>
+<li>This sample set consumes at a minimum <a href="https://www.youtube.com/watch?v=k6OWSf8_5J4">5</a> SIs
+
+<ul>
+<li>1 MySQL SI - todos-mysql, todos-sink</li>
+<li>1 Redis SI - todos-redis, todos-app</li>
+<li>1 RabbitMQ SI - todos-app, todos-processor, todos-sink</li>
+<li>1 Config Server SI - todos-*</li>
+<li>1 Service Registry SI - todos-*</li>
+</ul></li>
+</ol>
+
+<h2 id="projects-setup">Projects Setup</h2>
+
+<p>Project setup is pretty straightforward as each sample is <a href="https://start.spring.io">standard spring boot</a> with maven. All applications are modules within the <code>todos-apps</code> repository: <a href="https://github.com/Pivotal-Field-Engineering/todos-apps">todos-apps</a></p>
+
+<p>After you clone or unzip the repo your directory should look like so&hellip;</p>
+
+<pre><code class="language-bash">azwickey@Adams-MBP-3  ~/todos-apps   master  la -al
+
+drwxr-xr-x  14 azwickey  staff   448B Jul 24 15:30 .
+drwxr-xr-x   7 azwickey  staff   224B Jul 24 13:41 ..
+drwxr-xr-x  14 azwickey  staff   448B Jul 24 15:44 .git
+-rw-r--r--   1 azwickey  staff   393B Jul 24 14:26 .gitignore
+-rw-r--r--   1 azwickey  staff   1.2K Jul 24 13:43 README.md
+drwxr-xr-x   4 azwickey  staff   128B Jul 24 15:20 pace
+-rw-r--r--@  1 azwickey  staff   2.7K Jul 24 14:26 pom.xml
+drwxr-xr-x  14 azwickey  staff   448B Jul 24 15:30 todos-api
+drwxr-xr-x   8 azwickey  staff   256B Jul 24 14:27 todos-docs
+drwxr-xr-x  13 azwickey  staff   416B Jul 24 15:30 todos-edge
+drwxr-xr-x  15 azwickey  staff   480B Jul 24 15:30 todos-webui
+</code></pre>
+
+<h3 id="domain-model">Domain Model</h3>
+
+<p>All the samples in this workshop center around the <code>Todo</code> model and hence most are named <code>todos-blah-blah-blah</code>.  Each project scratches a particular Spring Boot + PCF itch but all share this simple <code>Todo</code> type.</p>
+
+<pre><code class="language-java">@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+class Todo implements Serializable {
+    private String id;
+    private String title;
+    private Boolean complete = Boolean.FALSE;
+}
+</code></pre>
+
+<p><em>However</em> it should be stated that each project maintains it&rsquo;s own implementation of this tiny model.  This gist is a Todo is a String id, String title and Boolean complete flag and that&rsquo;s it.  String as id perhaps is a good talking point around how id(s) should be typed and managed for certain use-cases.  Also considerations around what really needs an id anyway, who should own the id and such.  This sample set uses String (UUID) as an id and app code &ldquo;owns&rdquo; dealing out new ones&hellip;database id generation isn&rsquo;t used.</p>
+
+<p><strong>Apropos</strong></p>
+
+<ul>
+<li><a href="https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html"><code>java.util.UUID</code></a></li>
+<li><a href="https://docs.mongodb.com/manual/reference/method/ObjectId/">Mongo ObjectId</a></li>
+<li><a href="https://www.mongodb.com/blog/post/generating-globally-unique-identifiers-for-use-with-mongodb">Mongo Blog Post</a></li>
+<li><a href="https://github.com/sony/sonyflake">Sonyflake distributed ids</a><br /></li>
+</ul>
+
+<h3 id="todos-api">todos-api</h3>
+
+<p><a href="https://github.com/Pivotal-Field-Engineering/todos-apps/tree/master/todos-api">Todo(s) API</a> is a sample Spring Boot service that uses <code>spring-boot-starter-web</code> to implement a Spring MVC based REST API for <code>Todo(s)</code>.</p>
+
+<p>This is nice Spring Boot ice-breaker app and hacks at core Spring Boot features such as using the Spring Boot Starter pom, Auto-configuration, Property Sources, Configuration Properties, embedded Containers and Logging.  During the workshop we&rsquo;ll use Spring Cloud to connect persistence backends that implement the same HTTP CRUD API.</p>
+
+<p><strong>Talking Points</strong></p>
+
+<ul>
+<li>Spring Boot and its advantages</li>
+<li>Spring Boot Starter POM</li>
+<li>Spring Boot Auto Configuration</li>
+<li>Spring Boot Property Sources</li>
+<li>Spring Boot embedded Containers</li>
+<li>Spring Boot logging</li>
+<li>Spring Boot Web stacks (Spring WebMVC and Spring WebFlux)</li>
+<li><a href="https://spring.io/">Spring Framework</a></li>
+<li><a href="https://spring.io/projects/spring-boot">Spring Boot</a></li>
+<li><a href="https://github.com/cloudfoundry/java-buildpack">Java Buildpack</a></li>
+<li>Spring Auto Reconfiguration - key is understanding the levels of auto-configuration at play on PCF</li>
+</ul>
+
+<h3 id="todos-edge">todos-edge</h3>
+
+<p><a href="https://github.com/Pivotal-Field-Engineering/todos-apps/tree/master/todos-edge">Todo(s) Edge</a> is an edge for other Todo apps and serves as a client entry-point into app functionality, implemented using <a href="https://spring.io/projects/spring-cloud-gateway">Spring Cloud Gateway</a>.  The source is Kotlin however there&rsquo;s remarkably little code as the gateway is virtually all configuration.  By default the edge is configured to route traffic sent to <code>/todos/</code> to a backing API of some sort while root traffic routes to the UI.  During certain sections of the workshop we&rsquo;ll use Spring Cloud to control where the edge sends traffic.</p>
+
+<p><strong>Talking Points</strong></p>
+
+<ul>
+<li>Kotlin</li>
+<li>Kotlin support in Spring</li>
+<li>Spring WebFlux</li>
+<li>Spring Cloud Gateway</li>
+<li>Netty</li>
+</ul>
+
+<h3 id="todos-webui">todos-webui</h3>
+
+<p>A sample frontend <a href="https://vuejs.org/">Vue.js</a> app wrapped in Spring Boot goodness.</p>
+
+<ul>
+<li><a href="https://spring.io/projects/spring-boot">Spring Boot</a> for app bits, using webflux runtime</li>
+<li><a href="https://vuejs.org/">Vue.js</a> for frontend, inspired by <a href="http://todomvc.com/examples/vue/">TodoMVC Vue App</a>, difference is this one is vendored as a Spring Boot app and calls a backing endpoint (<code>/todos</code>)</li>
+</ul>
+
+<p>This application assumes the <code>/todos</code> endpoint is exposed from the same &ldquo;origin&rdquo;.  Because of this its best to use this application behind the <a href="#todos-edge">todos-edge</a> which will serve as a gateway and single origin to the client for both loading <code>todos-webui</code> and for proxying API calls to <code>/todos</code>.</p>
+
+<p><img src="todos-webui.png" alt="Todo(s) WebUI" /></p>
+
+<h3 id="todos-mysql">todos-mysql</h3>
+
+<p>Inevitably you&rsquo;ll need to implement Microservices to talk with Databases. <a href="https://github.com/corbtastik/todos-mysql">Todo(s) MySQL</a> contains a Microservice implemented in Kotlin using <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/">Spring Boot</a> and <a href="https://spring.io/projects/spring-cloud">Spring Cloud</a> under-pinnings, <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-sql.html#boot-features-jpa-and-spring-data">Spring Data JPA</a> for data binding and <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/howto-database-initialization.html#howto-execute-flyway-database-migrations-on-startup">Flyway</a> for database initialization.  It can be used as a standalone data service or as a backend for a Todo app.</p>
+
+<blockquote>
+<p><a href="https://spring.io/blog/2017/01/04/introducing-kotlin-support-in-spring-framework-5-0">Spring Framework 5</a> added support for <a href="https://kotlinlang.org/">Kotlin</a>. Developers can now implement Microservices in <a href="https://en.wikipedia.org/wiki/Java_(programming_language)">Java</a>, <a href="https://groovy-lang.org/">Groovy</a> and <a href="https://kotlinlang.org/">Kotlin</a>. Kotlin is <a href="https://www.thoughtworks.com/radar/languages-and-frameworks/kotlin">starting to show up in development communities</a> given most like the simplified syntax. If you&rsquo;re a Java developer you&rsquo;ll get up to speed on Kotlin quickly because it&rsquo;s very Java like but with <a href="https://kotlinlang.org/docs/reference/comparison-to-java.html">lots of simplifications</a>.</p>
+</blockquote>
+
+<p>Todo(s) Data uses Flyway to handle database schema creation and versioning. Using Flyway from Spring Boot starts with declaring a dependency on <code>org.flywaydb:flyway-core</code> in <code>pom.xml</code> and Spring Boot will Auto Configure on startup.  Spring profiles are used to boot into different database context, the default profile initiates H2 while the &ldquo;cloud&rdquo; profile used MySQL.</p>
+
+<p><strong>Talking Points</strong></p>
+
+<ul>
+<li>Kotlin</li>
+<li>Spring Data</li>
+<li>Spring Data JPA</li>
+<li>Flyway</li>
+<li>MySQL for PCF</li>
+</ul>
+
+<h3 id="todos-redis">todos-redis</h3>
+
+<p><a href="https://github.com/corbtastik/todos-redis">Todo(s) Redis</a> is a simple <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-nosql.html#boot-features-redis">Spring Data Redis</a> backend for a Todo API.  It&rsquo;s used as the default &ldquo;caching&rdquo; layer in the workshop sample set.</p>
+
+<p><strong>Talking Points</strong></p>
+
+<ul>
+<li><a href="https://redis.io/">Redis</a></li>
+<li><a href="https://redis.io/topics/data-types">Redis Hashes</a></li>
+<li><a href="https://redis.io/topics/rediscli">Redis cli</a></li>
+<li><a href="https://docs.pivotal.io/redis/index.html">Redis for PCF</a></li>
+<li><a href="https://docs.spring.io/spring-data/redis/docs/reference/html/">Spring Data Redis</a></li>
+<li><a href="https://content.pivotal.io/blog/an-introduction-to-look-aside-vs-inline-caching-patterns">Caching Use Cases and Patterns</a></li>
+</ul>
+
+<h3 id="todos-app">todos-app</h3>
+
+<p>Todo(s) App is a composite backend for a fully functional Todo app, it contains look-aside caching and business logic and uses Spring Cloud for app to app connectivity.  We&rsquo;ll see how to configure a fully functional Todo application using this backend which integrates with a System of Record (Sor) service and a Cache service. All enabled with Spring Cloud, MySQL for PCF and Redis for PCF.</p>
+
+<p><strong>Talking Points</strong></p>
+
+<ul>
+<li><a href="https://docs.pivotal.io/spring-cloud-services/common/index.html">Spring Cloud Services for PCF</a></li>
+<li><a href="https://docs.pivotal.io/p-mysql/index.html">MySQL for PCF</a></li>
+<li><a href="https://docs.pivotal.io/redis/index.html">Redis for PCF</a></li>
+<li>Configuration Server and Service Registry</li>
+<li>RestTemplate and Client Side Load-balancing</li>
+<li><a href="https://content.pivotal.io/blog/an-introduction-to-look-aside-vs-inline-caching-patterns">Pivotal Blog - Caching Patterns</a></li>
+</ul>
+<div class="edit-meta">
+
+<br></div><nav class="pagination"><a class="nav nav-prev" href="/demos/" title="Demos"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - Demos</a>
+<a class="nav nav-next" href="/demos/build-push/" title="Project Build and Initial App Deployment">Next - Project Build and Initial App Deployment <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><div class="fa-copyright" style="text-align: center;">
+    ©
+    <script>
+        var d = new Date();
+        document.write(d.getFullYear());
+    </script>
+    Pivotal Software, Inc.
+    All Rights Reserved.
+</div></footer>
+</main><div class="sidebar">
+<nav>
+<ul>
+<li class=""><a href="">Home</a></li>
+
+<li class=""><a href="/concepts/">Concepts</a>
+<ul class="">
+<li class=""><a href="/concepts/pivotal-intro-slide/">Pivotal Intro</a></li>
+<li class=""><a href="/concepts/cloud-native-platform-slide/">Cloud Native Platform</a></li>
+<li class=""><a href="/concepts/cloud-native-ops-slide/">Cloud Native Operations</a></li>
+<li class=""><a href="/concepts/cloud-native-apps-slide/">Cloud Native Apps</a></li>
+<li class=""><a href="/concepts/pcf-spring-slide/">PCF &#43; Spring</a></li>
+</ul>
+  
+</li>
+
+<li class="parent"><a href="/demos/">Demos</a>
+<ul class="sub-menu">
+<li class="active"><a href="/demos/prereq-overview/">Prerequisites and Sample Overview</a></li>
+<li class=""><a href="/demos/build-push/">Project Build and Initial App Deployment</a></li>
+<li class=""><a href="/demos/ops/">Application Operations</a></li>
+<li class=""><a href="/demos/scs/">Introduce Spring Cloud Services</a></li>
+</ul>
+  
+</li>
+</ul>
+</nav>
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>

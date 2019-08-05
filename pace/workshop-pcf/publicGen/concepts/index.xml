@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Concepts on Pivotal Workshop</title>
+    <link>/concepts/</link>
+    <description>Recent content in Concepts on Pivotal Workshop</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="/concepts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Pivotal Intro</title>
+      <link>/concepts/pivotal-intro-slide/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/concepts/pivotal-intro-slide/</guid>
+      <description> </description>
+    </item>
+    
+    <item>
+      <title>Cloud Native Platform</title>
+      <link>/concepts/cloud-native-platform-slide/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/concepts/cloud-native-platform-slide/</guid>
+      <description> </description>
+    </item>
+    
+    <item>
+      <title>Cloud Native Operations</title>
+      <link>/concepts/cloud-native-ops-slide/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/concepts/cloud-native-ops-slide/</guid>
+      <description> </description>
+    </item>
+    
+    <item>
+      <title>Cloud Native Apps</title>
+      <link>/concepts/cloud-native-apps-slide/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/concepts/cloud-native-apps-slide/</guid>
+      <description> </description>
+    </item>
+    
+    <item>
+      <title>PCF &#43; Spring</title>
+      <link>/concepts/pcf-spring-slide/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/concepts/pcf-spring-slide/</guid>
+      <description> </description>
+    </item>
+    
+  </channel>
+</rss>
