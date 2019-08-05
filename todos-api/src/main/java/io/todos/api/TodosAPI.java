@@ -40,7 +40,7 @@ public class TodosAPI {
     }
 
     @GetMapping("/")
-    public List<Todo> retrieve() {
+    public List<Todo> retrieveAll() {
         LOG.debug("Retrieving all todos as a List<Todo> of size " + todos.size()
             + " todos.api.limit=" + properties.getApi().getLimit());
         return new ArrayList<>(todos.values());
@@ -70,7 +70,7 @@ public class TodosAPI {
     }
 
     @DeleteMapping("/")
-    public void delete() {
+    public void deleteAll() {
         LOG.info("Removing ALL " + todos.size() + " todos.");
         todos.clear();
     }

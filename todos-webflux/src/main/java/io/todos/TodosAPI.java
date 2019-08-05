@@ -61,7 +61,7 @@ public class TodosAPI {
     }
 
     @GetMapping("/")
-    public Flux<Todo> retrieve() {
+    public Flux<Todo> retrieveAll() {
         return Flux.fromIterable(todos.values());
     }
 
@@ -104,7 +104,7 @@ public class TodosAPI {
     }
 
     @DeleteMapping("/")
-    public void delete() {
+    public void deleteAll() {
         todos.clear();
     }
 

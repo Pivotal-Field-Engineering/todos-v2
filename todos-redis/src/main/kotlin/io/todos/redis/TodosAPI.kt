@@ -26,7 +26,7 @@ class TodosAPI(
     @Autowired val properties: TodosProperties) {
 
     @GetMapping("/")
-    fun retrieve(): List<Todo> {
+    fun retrieveAll(): List<Todo> {
         return this.repo.findAll().toList()
     }
 

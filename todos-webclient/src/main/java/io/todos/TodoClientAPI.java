@@ -41,7 +41,7 @@ public class TodoClientAPI {
      * @return
      */
     @PostMapping("/")
-    public Mono<Todo> createTodo(@RequestBody Mono<Todo> todo) {
+    public Mono<Todo> create(@RequestBody Mono<Todo> todo) {
 
         Mono<Todo> mono = webClient.post()
                 .uri("/")
@@ -55,7 +55,7 @@ public class TodoClientAPI {
     }
 
     @GetMapping("/")
-    public Flux<Todo> retrieve() {
+    public Flux<Todo> retrieveAll() {
 
         Flux<Todo> flux = webClient.get()
             .uri("/")
@@ -85,7 +85,7 @@ public class TodoClientAPI {
     }
 
     @DeleteMapping("/")
-    public Mono<Void> delete() {
+    public Mono<Void> deleteAll() {
         return webClient.delete()
             .uri("/")
             .retrieve().bodyToMono(Void.class);

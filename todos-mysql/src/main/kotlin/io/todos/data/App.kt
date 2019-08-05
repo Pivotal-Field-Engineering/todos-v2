@@ -59,7 +59,7 @@ class App(
     }
 
     @GetMapping("/")
-    fun retrieve(): List<Todo> {
+    fun retrieveAll(): List<Todo> {
         return this.repo.findAll().iterator().asSequence().toList()
     }
 
@@ -96,6 +96,11 @@ class App(
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: String) {
         repo.deleteById(id)
+    }
+
+    @DeleteMapping("/")
+    fun deleteAll() {
+        this.repo.deleteAll()
     }
 
     @GetMapping("/limit")

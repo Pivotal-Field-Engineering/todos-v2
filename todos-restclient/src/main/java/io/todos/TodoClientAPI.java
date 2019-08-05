@@ -41,7 +41,7 @@ public class TodoClientAPI {
     }
 
     @GetMapping("/")
-    public List<Todo> retrieve() {
+    public List<Todo> retrieveAll() {
         ResponseEntity<List<Todo>> response = restTemplate.exchange("/",
                 HttpMethod.GET,
                 null,
@@ -65,7 +65,7 @@ public class TodoClientAPI {
     }
 
     @DeleteMapping("/")
-    public void delete() {
+    public void deleteAll() {
         this.restTemplate.delete("/");
     }
 
