@@ -7,25 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SimpleMySqlDeployCommand {
+public class TodoAppRedisDeployCommand {
 
     private final CfClient cfClient;
 
     @Autowired
-    public SimpleMySqlDeployCommand(CfClient cfClient) {
+    public TodoAppRedisDeployCommand(CfClient cfClient) {
         this.cfClient = cfClient;
     }
 
     public void push(String tag, String version, String serviceInstance) {
-        // push mysql backend app
-        cfClient.pushApplication(tag + "-todos-mysql", "todos-mysql-" + version + ".jar")
+
+        // push redis backend app
+        cfClient.pushApplication(tag + "-todos-redis", "todos-redis-" + version + ".jar")
             .then(cfClient.ops().services().bind(BindServiceInstanceRequest.builder()
-                .applicationName(tag + "-todos-mysql")
+                .applicationName(tag + "-todos-redis")
                 .serviceInstanceName(serviceInstance)
                 .build()))
             .then(cfClient.ops().applications()
                 .start(StartApplicationRequest.builder()
-                    .name(tag + "-todos-mysql").build())).subscribe();
+                    .name(tag + "-todos-redis").build())).subscribe();
 
         // push webui
         cfClient.pushApplication(tag + "-todos-webui", "todos-webui-" + version + ".jar")
@@ -45,7 +46,7 @@ public class SimpleMySqlDeployCommand {
                 .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
                     .name(tag + "-todos-edge")
                     .variableName("TODOS_API_ENDPOINT")
-                    .variableValue("https://" + tag + "-todos-mysql." + cfClient.domain())
+                    .variableValue("https://" + tag + "-todos-redis." + cfClient.domain())
                     .build()))
             .then(cfClient.ops().applications()
                 .start(StartApplicationRequest.builder()

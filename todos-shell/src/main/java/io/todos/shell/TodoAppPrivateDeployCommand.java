@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PrivateNetworkingDeployCommand {
+public class TodoAppPrivateDeployCommand {
     private final CfClient cfClient;
 
     @Autowired
-    public PrivateNetworkingDeployCommand(CfClient cfClient) {
+    public TodoAppPrivateDeployCommand(CfClient cfClient) {
         this.cfClient = cfClient;
     }
 

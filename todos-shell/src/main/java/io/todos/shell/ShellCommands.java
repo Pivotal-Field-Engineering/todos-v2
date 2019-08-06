@@ -70,7 +70,7 @@ public class ShellCommands {
     public void push(
             @ShellOption(help = "tag for hostname") String tag,
             @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version) {
-        context.getBean(SimpleDeployCommand.class).push(tag, version);
+        context.getBean(TodoAppDeployCommand.class).push(tag, version);
     }
 
     @ShellMethod("Simple Todo App Deploy with private networking")
@@ -78,7 +78,7 @@ public class ShellCommands {
             @ShellOption(help = "tag for hostname") String tag,
             @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version,
             @ShellOption(help = "internal domain (ex: apps.internal", defaultValue = "apps.internal") String internalDomain) {
-        context.getBean(PrivateNetworkingDeployCommand.class).push(tag, version,internalDomain);
+        context.getBean(TodoAppPrivateDeployCommand.class).push(tag, version,internalDomain);
     }
 
     @ShellMethod("Todo App with MySQL Deploy")
@@ -86,7 +86,7 @@ public class ShellCommands {
             @ShellOption(help = "tag for hostname") String tag,
             @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version,
             @ShellOption(help = "mysql service instance name (ex: todos-database)", defaultValue = "todos-database") String serviceInstance) {
-        context.getBean(SimpleMySqlDeployCommand.class).push(tag, version, serviceInstance);
+        context.getBean(TodoAppMySqlDeployCommand.class).push(tag, version, serviceInstance);
     }
 
     @ShellMethod("Todo App with Redis Deploy")
@@ -94,7 +94,33 @@ public class ShellCommands {
             @ShellOption(help = "tag for hostname") String tag,
             @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version,
             @ShellOption(help = "redis service instance name (ex: todos-redis)", defaultValue = "todos-redis") String serviceInstance) {
-        context.getBean(SimpleRedisDeployCommand.class).push(tag, version, serviceInstance);
+        context.getBean(TodoAppRedisDeployCommand.class).push(tag, version, serviceInstance);
+    }
+
+    /**
+     * Deploy all apps to PCF, SimpleDeployCommand is used to deploy base set (todos-edge,todos-api,todos-webui)
+     * @param tag
+     * @param version
+     * @param todosMessaging
+     */
+    @ShellMethod("Cornucopia of Todo Apps")
+    public void pushAll(
+            @ShellOption(help = "tag for hostname") String tag,
+            @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version,
+            @ShellOption(help = "rabbitmq service instance name (ex: todos-messaging)", defaultValue = "todos-messaging") String todosMessaging) {
+        context.getBean(TodoAppDeployCommand.class).push(tag, version);
+        context.getBean(SimpleDeployCommand.class).push("todos-mysql", tag, version);
+        context.getBean(SimpleDeployCommand.class).push("todos-redis", tag, version);
+        context.getBean(SimpleDeployCommand.class).push("todos-processor", tag, version, todosMessaging);
+        context.getBean(SimpleDeployCommand.class).push("todos-sink", tag, version, todosMessaging);
+        context.getBean(SimpleDeployCommand.class).push("todos-source", tag, version, todosMessaging);
+        context.getBean(SimpleDeployCommand.class).push("todos-restclient", tag, version);
+        context.getBean(SimpleDeployCommand.class).push("todos-webclient", tag, version);
+        context.getBean(SimpleDeployCommand.class).push("todos-webflux", tag, version);
+    }
+
+    private static interface AppConfiguration {
+
     }
 
     @ShellMethod("push with spring-cloud")
