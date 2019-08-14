@@ -54,4 +54,35 @@ public class TodoAppDeployCommand {
                         .start(StartApplicationRequest.builder()
                                 .name(tag + "-todos-edge").build())).subscribe();
     }
+
+    public void push(String tag, String version, String api) {
+
+        if (tag.length() < 1) {
+            tag = UUID.randomUUID().toString().substring(0, 8);
+        }
+
+        // push webui
+        cfClient.pushApplication(tag + "-todos-webui", "todos-webui-" + version + ".jar")
+                .then(cfClient.ops().applications()
+                        .start(StartApplicationRequest.builder()
+                                .name(tag + "-todos-webui").build())).subscribe();
+
+        // push edge and manually config UI and API endpoints in edge's ENV
+        cfClient.pushApplication(tag + "-todos-edge", "todos-edge-" + version + ".jar")
+                .then(cfClient.ops().applications()
+                        .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
+                                .name(tag + "-todos-edge")
+                                .variableName("TODOS_UI_ENDPOINT")
+                                .variableValue("https://" + tag + "-todos-webui." + cfClient.domain())
+                                .build()))
+                .then(cfClient.ops().applications()
+                        .setEnvironmentVariable(SetEnvironmentVariableApplicationRequest.builder()
+                                .name(tag + "-todos-edge")
+                                .variableName("TODOS_API_ENDPOINT")
+                                .variableValue(api)
+                                .build()))
+                .then(cfClient.ops().applications()
+                        .start(StartApplicationRequest.builder()
+                                .name(tag + "-todos-edge").build())).subscribe();
+    }
 }

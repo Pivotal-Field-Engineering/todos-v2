@@ -1,18 +1,22 @@
+cf:
+  api: changeme
+  username: changeme
+  password: changeme
+  organization: changeme
+  space: changeme
+  domain: changeme
+  skipSslValidation: false
+destinations:
+  log-events: todos-logs
+  container-metric-events: todos-container-metrics
+  error-events: todos-errors
 spring:
     cloud:
         stream:
             bindings:
                 logEvents:
-                    destination: todos-logs
+                    destination: ${destinations.log-events}
                 errorEvents:
-                    destination: todos-errors
+                    destination: ${destinations.error-events}
                 containerMetricEvents:
-                    destination: todos-container-metrics
-cf:
-    api: api.sys.retro.io
-    username: corbs
-    password: changeme
-    organization: retro
-    space: arcade
-    domain: apps.retro.io
-    skipSslValidation: true
+                    destination: ${destinations.container-metric-events}

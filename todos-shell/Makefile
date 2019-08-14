@@ -1,4 +1,4 @@
-TODOS_HOME=~/dev/github/pivotal/todos-apps
+TODOS_HOME=..
 TODOS_VERSION=1.0.0.SNAP
 TODOS_JARS=./.apps/jars
 

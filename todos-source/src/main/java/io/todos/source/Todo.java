@@ -14,5 +14,5 @@ import java.io.Serializable;
 class Todo implements Serializable {
     private String id;
     private String title;
-    private Boolean completed = Boolean.FALSE;
+    private Boolean complete = Boolean.FALSE;
 }

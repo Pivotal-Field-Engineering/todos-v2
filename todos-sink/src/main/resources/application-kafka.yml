@@ -2,6 +2,9 @@
 spring:
     cloud:
         stream:
+            kafka:
+                binder:
+                    brokers: 'kafka.retro.io'
             bindings:
                 input:
                     destination: todos-out

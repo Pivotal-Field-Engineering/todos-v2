@@ -1,21 +1,9 @@
+kafka:
+  endpoint: 'changeme.kafka.io'
+  port: 9021
 spring:
     cloud:
         stream:
             kafka:
                 binder:
-                    brokers: 'kafka.retro.io'
-            bindings:
-                logEvents:
-                    destination: todos-logs
-                errorEvents:
-                    destination: todos-errors
-                containerMetricEvents:
-                    destination: todos-container-metrics
-cf:
-    api: api.sys.retro.io
-    username: corbs
-    password: howdy
-    organization: retro
-    space: arcade
-    domain: apps.retro.io
-    skipSslValidation: true
+                    brokers: ${kafka.endpoint}
