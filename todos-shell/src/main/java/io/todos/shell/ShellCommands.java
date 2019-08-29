@@ -69,6 +69,13 @@ public class ShellCommands {
     @ShellMethod("Simple Todo App Deploy")
     public void push(
             @ShellOption(help = "tag for hostname") String tag,
+            @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version) {
+        context.getBean(TodoAppDeployCommand.class).push(tag, version);
+    }
+
+    @ShellMethod("Simple Todo App Deploy")
+    public void pushWithApi(
+            @ShellOption(help = "tag for hostname") String tag,
             @ShellOption(help = "version (ex: 1.0.0.RELEASE, 1.0.0.SNAP)", defaultValue = "1.0.0.SNAP") String version,
             @ShellOption(help = "api for backend, http|https://some.todos.api.io") String api) {
         context.getBean(TodoAppDeployCommand.class).push(tag, version, api);
