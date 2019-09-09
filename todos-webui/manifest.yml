@@ -3,5 +3,9 @@ applications:
 - name: todos-webui
   memory: 1G
   path: target/todos-webui-1.0.0.SNAP.jar
+  services:
+  - todos-config
+  - todos-registry
   env:
+    TRUST_CERTS: api.sys.retro.io
     SPRING_SECURITY_USER_NAME: 'Nacho'

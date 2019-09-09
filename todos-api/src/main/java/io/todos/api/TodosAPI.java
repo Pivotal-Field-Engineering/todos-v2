@@ -42,9 +42,9 @@ public class TodosAPI {
     }
 
     @GetMapping("/")
-    public List<Todo> retrieve() {
+    public List<Todo> retrieveAll() {
         LOG.debug("Retrieving all todos as a List<Todo> of size " + todos.size()
-                + " todos.api.limit=" + properties.getApi().getLimit());
+            + " todos.api.limit=" + properties.getApi().getLimit());
         return new ArrayList<>(todos.values());
     }
 
@@ -65,14 +65,14 @@ public class TodosAPI {
             return todos.get(todo.getId());
         } else {
             LOG.error("Limit reached, todos list size=" + todos.size()
-                    + " is >= todos.api.limit=" + properties.getApi().getLimit());
+                + " is >= todos.api.limit=" + properties.getApi().getLimit());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    format("todos.api.limit=%d, todos.size()=%d", properties.getApi().getLimit(), todos.size()));
+                format("todos.api.limit=%d, todos.size()=%d", properties.getApi().getLimit(), todos.size()));
         }
     }
 
     @DeleteMapping("/")
-    public void delete() {
+    public void deleteAll() {
         LOG.info("Removing ALL " + todos.size() + " todos.");
         todos.clear();
     }
@@ -127,5 +127,11 @@ public class TodosAPI {
     public Limit getLimit() {
         LOG.info("Checking Limit, todos.size=" + this.todos.size() + " todos.api.limit=" + properties.getApi().getLimit());
         return Limit.builder().size(this.todos.size()).limit(properties.getApi().getLimit()).build();
+    }
+
+    @GetMapping("/kill")
+    public void kill() {
+        LOG.debug("Killing the process.  BYE!!");
+        System.exit(1);
     }
 }

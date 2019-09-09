@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-class Todo implements Serializable {
+public class Todo implements Serializable {
     private String id;
     private String title;
     private Boolean complete = Boolean.FALSE;

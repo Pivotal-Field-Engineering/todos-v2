@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-class Limit {
+public class Limit {
     private Integer limit;
     private Integer size;
 }

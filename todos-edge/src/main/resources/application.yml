@@ -1,8 +1,8 @@
 todos:
   api:
-    serviceId: TODOS-API
+    service: TODOS-API
   ui:
-    serviceId: TODOS-WEBUI
+    service: TODOS-WEBUI
 spring:
   application:
     name: todos-edge
@@ -10,14 +10,14 @@ spring:
     gateway:
       routes:
       - id: todos_api_lb
-        uri: lb://${todos.api.serviceId}
+        uri: lb://${todos.api.service}
         predicates:
         - Path=/todos/**
         filters:
         - SetResponseHeader=X-TODOS-EDGE-ROUTE-ID, todos_api_lb
         - RewritePath=/todos/(?<path>.*), /$\{path}
       - id: todos_webui_lb
-        uri: lb://${todos.ui.serviceId}
+        uri: lb://${todos.ui.service}
         predicates:
         - Path=/**
   main:
