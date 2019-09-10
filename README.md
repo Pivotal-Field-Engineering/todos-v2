@@ -23,7 +23,9 @@ A sample [Spring Boot](https://spring.io/projects/spring-boot) app that uses `sp
 
 ### [__todos-webui__](/todos-webui)
 
-A sample frontend [Vue.js](https://vuejs.org/) app wrapped in [Spring Boot](https://spring.io/projects/spring-boot) goodness.
+A fun sample frontend [Vue.js](https://vuejs.org/) app wrapped in [Spring Boot](https://spring.io/projects/spring-boot) goodness.
+
+![Todos WebUI](todos-docs/docs/todos-workshop/img/todos-webui-focus.png "Todos WebUI Focus")
 
 ---
 
