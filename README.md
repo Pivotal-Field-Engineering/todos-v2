@@ -19,18 +19,15 @@ A sample [Spring Boot](https://spring.io/projects/spring-boot) app that uses `sp
 
 ![Todos API](todos-docs/docs/todos-workshop/img/todos-api-focus.png "Todos API Focus")
 
----
-
 ### [__todos-webui__](/todos-webui)
 
 A fun sample frontend [Vue.js](https://vuejs.org/) app wrapped in [Spring Boot](https://spring.io/projects/spring-boot) goodness.
 
 ![Todos WebUI](todos-docs/docs/todos-workshop/img/todos-webui-focus.png "Todos WebUI Focus")
 
----
-
 ### [__todos-edge__](/todos-edge)
 
 Todo(s) Edge is an edge for other Todo apps and serves as a client entry-point into functionality, implemented using [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway).
 
----
+![Todos Edge](todos-docs/docs/todos-workshop/img/todos-edge-focus.png "Todos Edge Focus")
+
