@@ -1,6 +1,6 @@
 ---
 applications:
-- name: todos-webui
+- name: demo-todos-webui
   memory: 1G
   path: target/todos-webui-1.0.0.SNAP.jar
   env:

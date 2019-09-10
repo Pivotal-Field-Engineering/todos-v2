@@ -1,10 +1,13 @@
-# destination 'todos-out' is the rendezvous between the output and input channel
 spring:
     cloud:
         stream:
             kafka:
                 binder:
                     brokers: 'kafka.retro.io'
-            bindings:
-                input:
-                    destination: todos-out
+#                    configuration:
+#                        sasl:
+#                            mechanism: PLAIN
+#                            jaas:
+#                                config: 'org.apache.kafka.common.security.plain.PlainLoginModule required username=test password=test123;'
+#                        security:
+#                            protocol: SASL_PLAINTEXT

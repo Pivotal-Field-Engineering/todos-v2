@@ -1,9 +1,24 @@
-kafka:
-  endpoint: 'changeme.kafka.io'
-  port: 9021
+destinations:
+  log-events: todos-logs
+  container-metric-events: todos-container-metrics
+  error-events: todos-errors
 spring:
     cloud:
         stream:
             kafka:
                 binder:
-                    brokers: ${kafka.endpoint}
+#                    configuration:
+#                        sasl:
+#                            mechanism: PLAIN
+#                            jaas:
+#                                config: 'org.apache.kafka.common.security.plain.PlainLoginModule required username=test password=test123;'
+#                        security:
+#                            protocol: SASL_PLAINTEXT
+                    brokers: 'kafka.retro.io'
+            bindings:
+                logEvents:
+                    destination: todos-logs
+                errorEvents:
+                    destination: todos-errors
+                containerMetricEvents:
+                    destination: todos-container-metrics

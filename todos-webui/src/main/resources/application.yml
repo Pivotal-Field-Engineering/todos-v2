@@ -5,7 +5,7 @@ spring:
     cache: false
   security:
     user:
-      name: Bucky
+      name: Nacho
 todos:
   webui:
     placeholder: "Time to wash the dog?"
