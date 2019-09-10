@@ -31,3 +31,14 @@ Todo(s) Edge is an edge for other Todo apps and serves as a client entry-point i
 
 ![Todos Edge](todos-docs/docs/todos-workshop/img/todos-edge-focus.png "Todos Edge Focus")
 
+### [__todos-mysql__](/todos-mysql)
+
+A sample backend implemented in [Kotlin](https://kotlinlang.org) using [Spring Boot](https://spring.io/projects/spring-boot), [Spring Data](https://spring.io/projects/spring-data), [Flyway](https://flywaydb.org/) and [MySQL for PCF](https://docs.pivotal.io/p-mysql/index.html).
+
+![Todos MySQL](todos-docs/docs/todos-workshop/img/todos-mysql-focus.png "Todos MySQL Focus")
+
+### [__todos-redis__](/todos-redis)
+
+A sample backend implemented using [Spring Boot](https://spring.io/projects/spring-boot), [Spring Data Redis](https://spring.io/projects/spring-data-redis) and [Redis for PCF](https://docs.pivotal.io/redis/index.html).
+
+![Todos Redis](todos-docs/docs/todos-workshop/img/todos-redis-focus.png "Todos Redis Focus")
