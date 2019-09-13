@@ -40,6 +40,7 @@
         <module>todos-shell</module>
         <module>todos-webclient</module>
         <module>todos-restclient</module>
+        <module>todos-cloudcache</module>
     </modules>
 
     <dependencies>
