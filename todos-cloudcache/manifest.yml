@@ -1,0 +1,8 @@
+---
+applications:
+- name: todos-cloudcache
+  memory: 1G
+  path: target/todos-cloudcache-1.0.0.SNAP.jar
+  buildpack: java_buildpack
+  services:
+  - todos-pcc
