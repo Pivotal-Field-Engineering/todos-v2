@@ -5,7 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
@@ -70,7 +76,7 @@ public class TodoClientAPI {
      * @return
      */
     @GetMapping("/{id}")
-    public Mono<Todo> retrieve(@PathVariable Integer id) {
+    public Mono<Todo> retrieve(@PathVariable String id) {
 
         Mono<Todo> mono = webClient.get()
             .uri("/{id}", id)
@@ -92,14 +98,14 @@ public class TodoClientAPI {
     }
 
     @DeleteMapping("/{id}")
-    public Mono<Todo> delete(@PathVariable Integer id) {
+    public Mono<Todo> delete(@PathVariable String id) {
         return webClient.delete()
             .uri("/{id}", id)
                 .retrieve().bodyToMono(Todo.class);
     }
 
     @PatchMapping("/{id}")
-    public Mono<Todo> update(@PathVariable Integer id, @RequestBody Mono<Todo> todo) {
+    public Mono<Todo> update(@PathVariable String id, @RequestBody Mono<Todo> todo) {
         Mono<Todo> mono = webClient.patch()
             .uri("/{id}", id)
             .accept(MediaType.APPLICATION_JSON)

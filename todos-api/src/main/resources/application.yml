@@ -3,7 +3,7 @@ spring:
     name: todos-api
 logging:
   level:
-    io.todos: INFO
+    io.todos: DEBUG
 management:
   endpoints:
     web:

@@ -1,11 +1,8 @@
 ---
 applications:
-- name: ((app.name))
-  memory: ((app.memory))
-  routes:
-  - route: ((app.route))
-  path: ((app.artifact))
-  buildpack: java_buildpack
+- name: todos-webclient
+  memory: 1G
+  path: target/todos-webclient-1.0.0.SNAP.jar
+  buildpack: java_buildpack_offline
   env:
-    ((env-key-1)): ((env-val-1))
-    ((env-key-2)): ((env-val-2))
+    TODOS_API_ENDPOINT: http://demo-todos-api.apps.internal:8080
