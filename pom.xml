@@ -32,6 +32,7 @@
         <module>todos-webui</module>
         <module>todos-mysql</module>
         <module>todos-redis</module>
+        <module>todos-redis</module>
     </modules>
 
     <dependencies>
