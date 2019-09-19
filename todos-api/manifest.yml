@@ -9,4 +9,3 @@ applications:
   - todos-registry
   env:
     TRUST_CERTS: api.sys.retro.io
-    SPRING_APPLICATION_NAME: corbs

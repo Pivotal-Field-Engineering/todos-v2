@@ -1,11 +1,16 @@
 spring:
   application:
-    name: todos-api
+    name: todos-webclient
 logging:
   level:
     io.todos: DEBUG
+server:
+    port: 8009
 management:
   endpoints:
     web:
       exposure:
         include: '*'
+todos:
+  api:
+    service: 'http://TODOS-API'

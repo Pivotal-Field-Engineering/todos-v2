@@ -1,9 +1,14 @@
 ---
 applications:
 - name: todos-api
-  domain: apps.internal
   memory: 1G
+  domain: apps.internal
   path: target/todos-api-1.0.0.SNAP.jar
   buildpack: java_buildpack_offline
+  services:
+  - todos-config
+  - todos-registry
   env:
-    TODOS_API_LIMIT: 1024
+    TRUST_CERTS: api.sys.retro.io
+    SPRING_PROFILES_ACTIVE: direct
+

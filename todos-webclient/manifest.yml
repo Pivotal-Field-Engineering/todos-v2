@@ -1,0 +1,10 @@
+---
+applications:
+- name: todos-webclient
+  memory: 1G
+  path: target/todos-webclient-1.0.0.SNAP.jar
+  services:
+  - todos-config
+  - todos-registry
+  env: # remove TRUST_CERTS is you're not using self-signed certs on PCF
+    TRUST_CERTS: api.sys.retro.io
